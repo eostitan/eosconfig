@@ -1,0 +1,14 @@
+{
+  "name": "eosconfig",
+  "version": "1.0.0",
+  "description": "",
+  "main": "eosconfig.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Shaq Kheder",
+  "license": "ISC",
+  "dependencies": {
+    "simple-git": "^1.92.0"
+  }
+}
