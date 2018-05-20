@@ -29,21 +29,24 @@ git(repoPath).tags((err, res)=>{
     	console.log( key + ": " + availableTags[key]);
 	}
 
-	var input = readline.createInterface(process.stdin, process.stdout);
-	input.setPrompt('Choose Tag by #: ');
-	input.prompt();
-	input.on('line', function(line) {
-	    if (availableTags[line]) {
-	    	chosenTag = availableTags[line].trim();
-	    	input.close();
-	    }
-	    else{
-	    	console.log('Please enter a number from 0 to ' + (availableTags.length - 1))
-	    	input.prompt();
-	    }
-	}).on('close',function(){
-	    checkTags();
-	});
+	setTimeout(()=>{
+		var input = readline.createInterface(process.stdin, process.stdout);
+		input.setPrompt('Choose Tag by #: ');
+		input.prompt();
+		input.on('line', function(line) {
+		    if (availableTags[line]) {
+		    	chosenTag = availableTags[line].trim();
+		    	input.close();
+		    }
+		    else{
+		    	console.log('Please enter a number from 0 to ' + (availableTags.length - 1))
+		    	input.prompt();
+		    }
+		}).on('close',function(){
+		if (chosenTag)
+		    checkTags();
+		});
+	}, 200);
 });
 
 
