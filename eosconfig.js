@@ -67,7 +67,6 @@ function checkTags(){
 		    	input2.prompt();
 		    }
 		}).on('close',function(){
-		    buildEos();
 		});
 
 	}
@@ -79,8 +78,9 @@ function checkTags(){
 function buildEos(){
 	console.log('Checking out '+ chosenTag);
 	git(repoPath).checkout(chosenTag, ()=>{
+		console.log('Checkout of ' + chosenTag  + ' successful')
 		console.log('Building EOS ' + chosenTag);
-			process.chdir(repoPath);
+		process.chdir(repoPath);
 		const eosbuild = spawn('bash',['./eosio_build.sh']);
 
 		eosbuild.stdout.setEncoding('utf8'); 
@@ -89,19 +89,67 @@ function buildEos(){
 		});
 
 		eosbuild.on('close', (code) => {
-		  console.log(`eosbuild exited with code ${code}`);
 		  if (code == 0){
+		  	console.log('Build process completed successfully')
 		  	process.chdir(repoPath + '/build')
-		  	exec('make', ['install'])
-		  	console.log('success');
-		  	configureEos();
+			const eosMakeInstall = spawn('sudo',['make', 'install']);
+		  	eosMakeInstall.stdout.setEncoding('utf8'); 
+			eosMakeInstall.stdout.on('data', (chunk) => {
+				console.log(chunk)
+			});
+			eosMakeInstall.on('close', (code2) => {
+				if (code2 == 0){
+		  			console.log('Make install process completed successfully')
+		  			configureEos();
+				}
+		  		else 
+		 			console.log("Error running make install, code: " _ code2)
+			});
 		  }
+		 else 
+		 	console.log("Error running make install, code: " _ code)
+
 		});
 	})
 }
 
 
+function createNewChain(){
+	console.log('Configuring server for a new chain')
+	console.log('Creating new wallet')
+	exec('cleos wallet create', (e, stdout, stderr)=> {
+	    if (e instanceof Error) {
+	        // console.error(e);
+	    }
+	    console.log('stdout ', stdout);
+		if (stderr)
+			if (stderr.includes('Wallet already exists'))	
+				console.log('Wallet exists')
+			else console.log(stderr)
+			    
+	});
+
+}
+
+
 function configureEos(){
 	console.log('Configuring EOS');
+	//if user wants to create a new network
+	createNewChain();
+
+	//to start new network
+	// cleos wallet create
+	//save password to file
+	//cleos wallet unlock 
+	// cleos create key
+	//save it
+	//cleos wallet import <private key>
+	//test
+	//cleos wallet keys
+	//search to make sure private key got added
+
+	// create .local/share/eosio/nodeeos/config/genesis.json from template
+	// insert bolded items generated while maintaining length
+
 
 }
