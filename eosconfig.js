@@ -382,6 +382,8 @@ function main(){
 
 			if (newNetwork) {
 
+				console.log("creating");
+
 		    promptNetworkName("create", (name)=>{
 					//if user wants to create a new network
 					createWallet(()=>{
@@ -413,6 +415,8 @@ function main(){
 
 			}
 			else {
+
+				console.log("joining");
 				   
 		    promptNetworkName("join", (name)=>{
 
