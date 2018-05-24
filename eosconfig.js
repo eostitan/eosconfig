@@ -427,11 +427,11 @@ function main(){
 								fetchNetworkConfiguration((config)=>{
 
 									createGenesis(config.genesis, (genesis)=>{
-										createConfig(()=>{
+							/*			createConfig(()=>{
 
 											console.log('end');
 										
-										});			
+										});			*/
 									});			
 
 								});
