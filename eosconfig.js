@@ -298,16 +298,16 @@ function main(){
 	}
 
 	function pushNetworkConfiguration(configuration, cb){
-		
+		return cb();
 	}
 
 
 	function fetchNetworkConfiguration(name, cb){
-		
+		return cb();
 	}
 
 	function createConfig(cb){
-		console.log('Creating config.ini');
+		//console.log('Creating config.ini');
 		return cb();
 	}
 
@@ -390,7 +390,7 @@ function main(){
 						unlockWallet(()=>{
 							createKeys("master", true, ()=>{
 								createGenesis(null, (genesis)=>{
-									createConfig(()=>{
+							/*		createConfig(()=>{
 
 										let config = {
 											name:name,
@@ -405,7 +405,7 @@ function main(){
 											});
 										});
 						
-									});				
+									});				*/
 								});
 							});
 						});
