@@ -281,7 +281,7 @@ function main(){
 			};
 
 			genesisContent.initial_timestamp = new Date();
-			genesisContent.initial_key = publicKey;
+			genesisContent.initial_key = masterPublicKey;
 			genesisContent.initial_chain_id = Date.now().toString();
 
 			var sampleChainId = "0000000000000000000000000000000000000000000000000000000020180511";
