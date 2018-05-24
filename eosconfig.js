@@ -212,10 +212,11 @@ function main(){
 				exec('cleos wallet import ' + masterPrivateKey, (e, stdout, stderr)=> {
 					
 					if (isInitialKey){
-						promptAnyKey("Please copy this public key into eosio-server/config/server.json on your server and then press any key to continue.")
+						promptAnyKey("Please copy this public key into eosio-server/config/server.json on your server and then press any key to continue.", function(res){
+							return cb();
+						});
 					}
-					
-					return cb();
+					else return cb();
 
 				});
 
