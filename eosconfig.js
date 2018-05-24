@@ -168,8 +168,14 @@ function main(){
 						if (stderr){
 							//TODO prompt user to enter password
 							console.log('cant find wallet password')
+
+							promptPassword((password)=>{
+								walletKey = password;
+								cb();
+							});
+
 						}
-						if (stdout){
+						else if (stdout){
 							walletKey = stdout;
 							cb();
 						}
@@ -240,7 +246,6 @@ function main(){
 
 	function createGenesis(genesis, cb){
 		console.log('Creating genesis.json')
-
 
 		var genesisContent;
 
@@ -324,6 +329,17 @@ function main(){
 		    	console.log('Please enter y or n')
 		    	input.prompt();
 		    }
+		}).on('close',function(){
+		});
+	}
+
+	function promptPassword(cb){
+		var input = readline.createInterface(process.stdin, process.stdout); //todo: use silent prompt
+		input.setPrompt("Please enter your wallet password. ");
+		input.prompt();
+		input.on('line', function(line) {
+			input.close();
+			return cb(line);
 		}).on('close',function(){
 		});
 	}
