@@ -307,7 +307,7 @@ function main(){
 
 	function promptNetworkInfo(cb){
 		var input = readline.createInterface(process.stdin, process.stdout);
-		input.setPrompt("Do you want to create a new network (y/N)?");
+		input.setPrompt("Do you want to create a new network (y/N)? ");
 		input.prompt();
 		input.on('line', function(line) {
 			console.log("line", line, line.length)
@@ -319,25 +319,28 @@ function main(){
 		    	console.log('Please enter y or n')
 		    	input.prompt();
 		    }
+		}).on('close',function(){
 		});
 	}
 
 	function promptNetworkName(action, cb){
 		var input = readline.createInterface(process.stdin, process.stdout);
-		input.setPrompt("Please enter a network name to " + action);
+		input.setPrompt("Please enter a network name to " + action + ". ");
 		input.prompt();
 		input.on('line', function(line) {
 			return cb(line);
+		}).on('close',function(){
 		});
 	}
 
 
 	function promptAnyKey(message, cb){
 		var input = readline.createInterface(process.stdin, process.stdout);
-		input.setPrompt(message);
+		input.setPrompt(message + " ");
 		input.prompt();
 		input.on('line', function(line) {
 			return cb(line);
+		}).on('close',function(){
 		});
 	}
 
@@ -408,7 +411,7 @@ function main(){
 							});
 						});
 					});
-					
+
 		    });
 
 			}
