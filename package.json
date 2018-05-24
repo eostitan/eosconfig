@@ -9,6 +9,7 @@
   "author": "Shaq Kheder",
   "license": "ISC",
   "dependencies": {
-    "simple-git": "^1.92.0"
+    "simple-git": "^1.92.0",
+    "request": "*"
   }
 }
