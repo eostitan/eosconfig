@@ -435,15 +435,18 @@ function main(){
 									createConfig(()=>{
 
 										let config = {
-											name:name,
+											network_name:name,
 											tag:chosenTag || "dawn-v4.1.0",
 											genesis: genesis
 										}
 
-										pushNetworkConfiguration(config, ()=>{
-											fetchNetworkConfiguration(name, (config)=>{
+										pushNetworkConfiguration(config, (err, res)=>{
+											if (err) console.log("error:", err); //todo: reprompt
 
-												console.log("CONFIG:", config);
+											fetchNetworkConfiguration(name, (err, res)=>{
+												if (err) console.log("error:", err);
+											
+												console.log("CONFIG:", res);
 
 												console.log('end');
 
@@ -469,11 +472,11 @@ function main(){
 						unlockWallet(()=>{
 							createKeys("master", false, ()=>{
 
-								fetchNetworkConfiguration((config)=>{
+								fetchNetworkConfiguration((err, res)=>{
 
 									//todo : handle possible exception
 
-									console.log("CONFIG:", config);
+									console.log("CONFIG:", res);
 
 									createGenesis(config.genesis, (genesis)=>{
 										createConfig(()=>{
