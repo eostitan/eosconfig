@@ -312,8 +312,10 @@ function main(){
 		input.on('line', function(line) {
 			console.log("line", line, line.length)
 		    if (line.toLowerCase() == 'y' ||  line.toLowerCase() == 'yes')
+				  input.close();
 		    	return cb(true)
 		    else if  (line == 0 || line.toLowerCase() == 'n' ||  line.toLowerCase() == 'no')
+				  input.close();
 		    	return cb(false)
 		    else {
 		    	console.log('Please enter y or n')
@@ -328,6 +330,7 @@ function main(){
 		input.setPrompt("Please enter a network name to " + action + ". ");
 		input.prompt();
 		input.on('line', function(line) {
+			input.close();
 			return cb(line);
 		}).on('close',function(){
 		});
@@ -339,6 +342,7 @@ function main(){
 		input.setPrompt(message + " ");
 		input.prompt();
 		input.on('line', function(line) {
+			input.close();
 			return cb(line);
 		}).on('close',function(){
 		});
