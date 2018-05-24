@@ -10,6 +10,8 @@
   "license": "ISC",
   "dependencies": {
     "simple-git": "^1.92.0",
-    "request": "*"
+    "request": "*",
+    "canonicaljson":"*",
+    "eosjs-ecc":"*"
   }
 }

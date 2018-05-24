@@ -4,6 +4,8 @@ var readline = require('readline');
 const git = require('simple-git');
 var fs = require('fs');
 var request = require("request");
+var cjson = require("canonicaljson");
+var eos = require("eosjs-ecc");
 
 function main(){
 
@@ -299,12 +301,38 @@ function main(){
 	}
 
 	function pushNetworkConfiguration(configuration, cb){
-		return cb();
+
+		let data = signRequest(configuration, true);
+
+		request({url: serverURL + '/addnetwork', method: 'POST', json: data}, function(err, res, body){
+
+			if (!body.error){
+				console.log("");
+				console.log("pushNetworkConfiguration");
+				console.log(JSON.stringify(body, null, 2));
+				return cb && cb(null, body);
+			}
+			else return cb && cb({error: error});
+		});
+
 	}
 
 
 	function fetchNetworkConfiguration(name, cb){
-		return cb();
+
+		request({url: serverURL + '/networks/' + name, method: 'GET', json:true}, function(err, res, body){
+
+			if (body){
+				console.log("");
+				console.log("fetchNetworkConfiguration");
+				console.log(JSON.stringify(body, null, 2));
+
+				return cb && cb(null, body);
+			}
+			else return cb && cb({error: "Network not found."});
+			
+		});
+
 	}
 
 	function createConfig(cb){
@@ -374,6 +402,18 @@ function main(){
 		
 	}
 
+	function signRequest(rq, append){
+
+		let newRq = JSON.parse(JSON.stringify(rq));
+
+		if (append) {
+			newRq.signature = eos.sign(cjson.stringify(rq), clientConfig.private_key);
+			return newRq;
+		}
+		else return eos.sign(cjson.stringify(rq), clientConfig.private_key);
+
+	}
+	
 	function configureEos(){
 
 		console.log('Configuring EOS');
@@ -395,14 +435,17 @@ function main(){
 
 										let config = {
 											name:name,
-											tag:chosenTag,
+											tag:chosenTag || "dawn-v4.1.0",
 											genesis: genesis
 										}
 
 										pushNetworkConfiguration(config, ()=>{
-											fetchNetworkConfiguration((config)=>{
+											fetchNetworkConfiguration(name, (config)=>{
+
 												console.log("CONFIG:", config);
+
 												console.log('end');
+
 											});
 										});
 						
@@ -426,6 +469,10 @@ function main(){
 							createKeys("master", false, ()=>{
 
 								fetchNetworkConfiguration((config)=>{
+
+									//todo : handle possible exception
+
+									console.log("CONFIG:", config);
 
 									createGenesis(config.genesis, (genesis)=>{
 										createConfig(()=>{
