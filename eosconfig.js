@@ -305,16 +305,16 @@ function main(){
 		return cb();
 	}
 
-	function promptNetworkInfo(){
+	function promptNetworkInfo(cb){
 		var input = readline.createInterface(process.stdin, process.stdout);
 		input.setPrompt("Do you want to create a new network (y/N)?");
 		input.prompt();
 		input.on('line', function(line) {
 			console.log("line", line, line.length)
 		    if (line.toLowerCase() == 'y' ||  line.toLowerCase() == 'yes')
-		    	return true
+		    	return cb(true)
 		    else if  (line == 0 || line.toLowerCase() == 'n' ||  line.toLowerCase() == 'no')
-		    	return false
+		    	return cb(false)
 		    else {
 		    	console.log('Please enter y or n')
 		    	input.prompt();
@@ -322,22 +322,22 @@ function main(){
 		});
 	}
 
-	function promptNetworkName(action){
+	function promptNetworkName(action, cb){
 		var input = readline.createInterface(process.stdin, process.stdout);
 		input.setPrompt("Please enter a network name to " + action);
 		input.prompt();
 		input.on('line', function(line) {
-			return line;
+			return cb(line);
 		});
 	}
 
 
-	function promptAnyKey(message){
+	function promptAnyKey(message, cb){
 		var input = readline.createInterface(process.stdin, process.stdout);
 		input.setPrompt(message);
 		input.prompt();
 		input.on('line', function(line) {
-			return line;
+			return cb(line);
 		});
 	}
 
@@ -350,73 +350,76 @@ function main(){
 
 		console.log('Configuring EOS');
 
-		let newNetwork = promptNetworkInfo();
+		promptNetworkInfo((newNetwork)=>{
+			//if user wants to join an existing network
 
-		//if user wants to join an existing network
+			if (newNetwork) {
 
-		if (newNetwork) {
+		    promptNetworkName("create", (name)=>{
+					//if user wants to create a new network
+					createWallet(()=>{
+						unlockWallet(()=>{
+							createKeys("master", true, ()=>{
+								createGenesis(null, (genesis)=>{
+									createConfig(()=>{
 
-	    let name = promptNetworkName("create");
+										let config = {
+											name:name,
+											tag:chosenTag,
+											genesis: genesis
+										}
 
-			//if user wants to create a new network
-			createWallet(()=>{
-				unlockWallet(()=>{
-					createKeys("master", true, ()=>{
-						createGenesis(null, (genesis)=>{
-							createConfig(()=>{
-
-								let config = {
-									name:name,
-									tag:chosenTag,
-									genesis: genesis
-								}
-
-								pushNetworkConfiguration(config, ()=>{
-									fetchNetworkConfiguration((config)=>{
-										console.log("CONFIG:", config);
-										console.log('end');
-									});
+										pushNetworkConfiguration(config, ()=>{
+											fetchNetworkConfiguration((config)=>{
+												console.log("CONFIG:", config);
+												console.log('end');
+											});
+										});
+						
+									});				
 								});
-				
-							});				
+							});
 						});
 					});
-				});
-			});
 
-		}
-		else {
-			   
-			let name = promptNetworkName("join");
+		    });
 
-			createWallet(()=>{
-				unlockWallet(()=>{
-					createKeys("master", false, ()=>{
+			}
+			else {
+				   
+		    promptNetworkName("join", (name)=>{
 
-						fetchNetworkConfiguration((config)=>{
+					createWallet(()=>{
+						unlockWallet(()=>{
+							createKeys("master", false, ()=>{
 
-							createGenesis(config.genesis, (genesis)=>{
-								createConfig(()=>{
+								fetchNetworkConfiguration((config)=>{
 
-									console.log('end');
-								
-								});			
-							});			
+									createGenesis(config.genesis, (genesis)=>{
+										createConfig(()=>{
 
+											console.log('end');
+										
+										});			
+									});			
+
+								});
+
+							});
 						});
-
 					});
-				});
-			});
+					
+		    });
 
+			}
 
-		}
+		});
 
 	}
 
 	//run();
 	configureEos();
-	
+
 }
 
 main();
