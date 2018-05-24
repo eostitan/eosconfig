@@ -307,7 +307,7 @@ function main(){
 	}
 
 	function createConfig(cb){
-		//console.log('Creating config.ini');
+		console.log('Creating config.ini');
 		return cb();
 	}
 
@@ -390,8 +390,8 @@ function main(){
 						unlockWallet(()=>{
 							createKeys("master", true, ()=>{
 								createGenesis(null, (genesis)=>{
-							/*		createConfig(()=>{
-
+									createConfig(()=>{
+/*
 										let config = {
 											name:name,
 											tag:chosenTag,
@@ -403,9 +403,9 @@ function main(){
 												console.log("CONFIG:", config);
 												console.log('end');
 											});
-										});
+										});*/
 						
-									});				*/
+									});				
 								});
 							});
 						});
