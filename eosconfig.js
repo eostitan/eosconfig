@@ -302,7 +302,7 @@ function main(){
 
 	function pushNetworkConfiguration(configuration, cb){
 
-		let data = signRequest(configuration, true);
+		let data = signRequest(configuration, masterPrivateKey, true);
 
 		request({url: serverURL + '/addnetwork', method: 'POST', json: data}, function(err, res, body){
 
@@ -402,18 +402,18 @@ function main(){
 		
 	}
 
-	function signRequest(rq, append){
+	function signRequest(rq, key, append){
 
 		let newRq = JSON.parse(JSON.stringify(rq));
 
 		if (append) {
-			newRq.signature = eos.sign(cjson.stringify(rq), clientConfig.private_key);
+			newRq.signature = eos.sign(cjson.stringify(rq), key);
 			return newRq;
 		}
-		else return eos.sign(cjson.stringify(rq), clientConfig.private_key);
+		else return eos.sign(cjson.stringify(rq), key);
 
 	}
-	
+
 	function configureEos(){
 
 		console.log('Configuring EOS');
@@ -427,6 +427,7 @@ function main(){
 
 		    promptNetworkName("create", (name)=>{
 					//if user wants to create a new network
+					//todo : check if wallet already exists, if it does, reuse the master key instead of creating a new one
 					createWallet(()=>{
 						unlockWallet(()=>{
 							createKeys("master", true, ()=>{
