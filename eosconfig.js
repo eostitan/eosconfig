@@ -252,7 +252,7 @@ function main(){
 
 		var genesisContent;
 
-		if (genesis){
+		if (!genesis){
 
 			genesisContent = {
 				"initial_configuration": {
@@ -312,7 +312,7 @@ function main(){
 				console.log(JSON.stringify(body, null, 2));
 				return cb && cb(null, body);
 			}
-			else return cb && cb({error: error});
+			else return cb && cb({error: body.error});
 		});
 
 	}
