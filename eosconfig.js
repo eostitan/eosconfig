@@ -446,9 +446,9 @@ function main(){
 											fetchNetworkConfiguration(name, (err, res)=>{
 												if (err) console.log("error:", err);
 											
-												console.log("CONFIG:", res);
+												console.log("CONFIG:", JSON.stringify(res, null, 2));
 
-												console.log('end');
+												console.log('Configuration of eosio is complete.');
 
 											});
 										});
@@ -476,13 +476,13 @@ function main(){
 
 									//todo : handle possible exception
 
-									console.log("CONFIG:", res);
+									console.log("CONFIG:", JSON.stringify(res, null, 2));
 
-									createGenesis(config.genesis, (genesis)=>{
+									createGenesis(res.genesis, (genesis)=>{
 										createConfig(()=>{
 
-											console.log('end');
-										
+											console.log('Configuration of eosio is complete.');
+
 										});			
 									});			
 
