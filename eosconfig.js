@@ -291,9 +291,10 @@ function main(){
 		}
 		else genesisContent = genesis;
 
-		exec('echo ' + genesisContent + ' > ~/.local/share/eosio/nodeeos/config/genesis.json', ()=>{cb()});
+		exec('echo ' + genesisContent + ' > ~/.local/share/eosio/nodeeos/config/genesis.json', ()=>{
+			return cb && cb(genesisContent);
+		});
 
-		return cb && cb(genesisContent);
 
 	}
 
@@ -391,7 +392,7 @@ function main(){
 							createKeys("master", true, ()=>{
 								createGenesis(null, (genesis)=>{
 									createConfig(()=>{
-/*
+
 										let config = {
 											name:name,
 											tag:chosenTag,
@@ -403,7 +404,7 @@ function main(){
 												console.log("CONFIG:", config);
 												console.log('end');
 											});
-										});*/
+										});
 						
 									});				
 								});
@@ -427,11 +428,11 @@ function main(){
 								fetchNetworkConfiguration((config)=>{
 
 									createGenesis(config.genesis, (genesis)=>{
-							/*			createConfig(()=>{
+										createConfig(()=>{
 
 											console.log('end');
 										
-										});			*/
+										});			
 									});			
 
 								});
