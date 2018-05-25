@@ -10,6 +10,10 @@ var async = require("async");
 
 function main(){
 
+	var configTemplate = fs.readFileSync("./configTemplate", "utf8");
+
+	//console.log("config template", configTemplate);
+
 	var availableTags = [];
 	var chosenTag;
 	var currentTag;
@@ -362,9 +366,19 @@ function main(){
 
 	}
 
-	function createConfig(cb){
+	function createConfig(name, cb){
 		console.log('Creating config.ini');
-		return cb();
+
+		let configContent = configTemplate;
+
+		configContent += "\nagent-name = " + '"' + name + '"';
+		configContent += "\nproducer-name = " + name ; 
+		configContent += '\nprivate-key = ["' + masterPublicKey + '","' + masterPrivateKey + '"]'; 
+
+		exec('echo ' + file + ' > ~/.local/share/eosio/nodeeos/config/config.ini', ()=>{
+			return cb && cb(configContent);
+		});
+
 	}
 
 	function promptNetworkInfo(cb){
@@ -386,6 +400,17 @@ function main(){
 		    	console.log('Please enter y or n')
 		    	input.prompt();
 		    }
+		}).on('close',function(){
+		});
+	}
+
+	function promptNodeName(cb){
+		var input = readline.createInterface(process.stdin, process.stdout);
+		input.setPrompt("Please enter your account name (to be created on the network). ");
+		input.prompt();
+		input.on('line', function(line) {
+			input.close();
+			return cb(line);
 		}).on('close',function(){
 		});
 	}
@@ -491,11 +516,43 @@ function main(){
 
 			console.log("Pushing contract...");
 
-			return cb();
+      let filepath = path.join(repoPath, "build", "contracts", command.path);
+
+			exec('cleos set contract ' + command.name + " " + filepath, (e, stdout, stderr)=> {
+
+				if (stdout){
+					console.log(stdout);
+				}
+				else if (stderr){
+					console.log(stderr);
+				}
+
+				return cb();
+
+			});
+
+
 		}
 		else if (command.command=="push_action"){
 
 			console.log("Pushing action...");
+
+			//cleos push action eosio.token issue '[ "eosio", "1000000000.0000 SYS", "memo" ]' -p eosio
+
+			let args = '"' + command.params.join('","') + '"';
+
+			exec('cleos push action ' + command.contract + " " + command.action + " " + args + " -p " + command.signature , (e, stdout, stderr)=> {
+
+				if (stdout){
+					console.log(stdout);
+				}
+				else if (stderr){
+					console.log(stderr);
+				}
+
+				return cb();
+
+			});
 
 			return cb();
 		}	
@@ -530,7 +587,7 @@ function main(){
 						unlockWallet(()=>{
 							createKeys("master", ()=>{
 								createGenesis(null, (genesis)=>{
-									createConfig(()=>{
+									createConfig("eosio", ()=>{
 
 										let config = {
 											network_name:name,
@@ -569,29 +626,31 @@ function main(){
 
 		    promptNetworkName("join", (name)=>{
 
-					createWallet(()=>{
-						unlockWallet(()=>{
-							createKeys("master",  ()=>{
+		    	promptNodeName((nodeName)=>{
+						createWallet(()=>{
+							unlockWallet(()=>{
+								createKeys("master",  ()=>{
 
-								fetchNetworkConfiguration((err, res)=>{
+									fetchNetworkConfiguration((err, res)=>{
 
-									//todo : handle possible exception
+										//todo : handle possible exception
 
-									console.log("CONFIG:", JSON.stringify(res, null, 2));
+										console.log("CONFIG:", JSON.stringify(res, null, 2));
 
-									createGenesis(res.genesis, (genesis)=>{
-										createConfig(()=>{
+										createGenesis(res.genesis, (genesis)=>{
+											createConfig(nodeName, ()=>{
 
-											console.log('Node configuration is complete.');
+												console.log('Node configuration is complete.');
 
+											});			
 										});			
-									});			
+
+									});
 
 								});
-
 							});
 						});
-					});
+		    	});
 
 		    });
 
