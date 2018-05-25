@@ -451,10 +451,9 @@ function main(){
 		if (command.command=="nodeos"){
 
 			console.log("Starting nodeos...");
-
-			command.arguments = command.arguments.replace("-p", "-p " + command.account);
-
-			const nodeos = exec('nohup nodeos' + command.arguments + " &");
+			command.arguments.push("&");
+			
+			const nodeos = spawn('nohup nodeos', command.arguments);
 
 			return setTimeout(cb, 1000);
 
