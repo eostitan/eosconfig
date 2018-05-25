@@ -491,7 +491,7 @@ function main(){
 				//trap not producing block because I don't have the private key (error)
 				//trap Produced block (success)
 
-				//console.log(chunk)
+				console.log(chunk)
 
 			});
 
