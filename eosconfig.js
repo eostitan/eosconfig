@@ -457,6 +457,7 @@ function main(){
 			const nodeos = spawn('nohup', command.arguments);
 
 			nodeos.stdout.setEncoding('utf8');
+			nodeos.stderr.setEncoding('utf8');
 			nodeos.stdout.on('data', (chunk) => {
 				console.log(chunk)
 			});
