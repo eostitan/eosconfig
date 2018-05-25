@@ -326,7 +326,7 @@ function main(){
 		}
 		else genesisContent = genesis;
 
-		fs.writeFileSync(genesisPath, genesisContent);
+		fs.writeFileSync(genesisPath, JSON.stringify(genesisContent, null, 2));
 
 		return cb && cb(genesisContent);
 
