@@ -454,7 +454,7 @@ function main(){
 
 												console.log('Node configuration is complete.');
 
-												configureChainBIOS(res.boot, ()=>{
+												configureChainBIOS(res.network.boot, ()=>{
 													console.log("Bootstrapping is complete.");
 												});
 
