@@ -323,14 +323,15 @@ function main(){
 		let data = configuration; //signRequest(configuration, masterPrivateKey, true);
 
 		request({url: serverURL + '/addnetwork', method: 'POST', json: data}, function(err, res, body){
+			if (err) console.log("ERROR:", err);
 
-			if (!body.error){
+			if (body && !body.error){
 				console.log("");
 				console.log("pushNetworkConfiguration");
 				console.log(JSON.stringify(body, null, 2));
 				return cb && cb(null, body);
 			}
-			else return cb && cb({error: body.error});
+			else return cb && cb({error: err || body.error});
 		});
 
 	}
