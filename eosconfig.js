@@ -473,7 +473,7 @@ function main(){
 			  console.log('error: ' + err);
 			});
 
-			return setTimeout(cb, 1000);
+			return setTimeout(cb, 10000);
 
 		}
 		else if (command.command=="generate_contract_keys"){
