@@ -463,7 +463,10 @@ function main(){
 			});
 
 			nodeos.stderr.on('data', (chunk) => {
+				//trap "replay or resync required";
+
 				console.log(chunk)
+
 			});
 
 			nodeos.on('error', function(err) {
