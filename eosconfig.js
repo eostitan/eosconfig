@@ -455,6 +455,12 @@ function main(){
 			command.arguments.push("&");
 
 			const nodeos = spawn('nohup', command.arguments);
+
+			nodeos.stdout.setEncoding('utf8');
+			nodeos.stdout.on('data', (chunk) => {
+				console.log(chunk)
+			});
+
 			nodeos.on('error', function(err) {
 			  console.log('error: ' + err);
 			});
