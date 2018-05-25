@@ -215,7 +215,7 @@ function main(){
 				exec('cleos wallet import ' + masterPrivateKey, (e, stdout, stderr)=> {
 
 					console.log("Key imported.");
-					
+
 					keyRing[keyName] = {
 						private: masterPrivateKey,
 						public: masterPublicKey
@@ -446,6 +446,8 @@ function main(){
 
 		if (command.command=="nodeos"){
 
+			console.log("Starting nodeos...");
+
 			command.arguments = command.arguments.replace("-p", "-p " + command.account);
 
 			const nodeos = exec('nohup nodeos' + command.arguments + " &");
@@ -455,6 +457,8 @@ function main(){
 		}
 		else if (command.command=="generate_contract_keys"){
 
+			console.log("Generating contracts keys and accounts...");
+
 			async.eachSeries(command.keys, prepareContract, function(err,res){
 				console.log("KEYRING:", keyRing);
 				return cb();
@@ -462,9 +466,15 @@ function main(){
 
 		}
 		else if (command.command=="set_contract"){
+
+			console.log("Pushing contract...");
+
 			return cb();
 		}
 		else if (command.command=="push_action"){
+
+			console.log("Pushing action...");
+
 			return cb();
 		}	
 
