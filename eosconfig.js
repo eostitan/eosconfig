@@ -29,6 +29,8 @@ function main(){
 	console.log('EOS.IO setup by eostitan.com');
 
 	const repoPath = process.env['HOME'] + '/EOSTITAN/eos';
+	const genesisPath = path.join(process.env['HOME'], ".local", "share", "eosio", "nodeos", "config", "genesis.json");
+	const configPath = path.join(process.env['HOME'], ".local", "share", "eosio", "nodeos", "config", "config.ini");
 
 	function run(){
 
@@ -324,10 +326,14 @@ function main(){
 		}
 		else genesisContent = genesis;
 
-		exec('echo ' + genesisContent + ' > ~/.local/share/eosio/nodeeos/config/genesis.json', ()=>{
+		fs.writeFileSync(genesisPath, genesisContent);
+
+		return cb && cb(genesisContent);
+
+/*		exec('echo ' + genesisContent + ' > ~/.local/share/eosio/nodeeos/config/genesis.json', ()=>{
 			console.log("Genesis file has been created");
 			return cb && cb(genesisContent);
-		});
+		});*/
 
 
 	}
@@ -377,10 +383,15 @@ function main(){
 		configContent += "\nproducer-name = " + name ; 
 		configContent += '\nprivate-key = ["' + masterPublicKey + '","' + masterPrivateKey + '"]'; 
 
-		exec('echo ' + configContent + ' > ~/.local/share/eosio/nodeeos/config/config.ini', ()=>{
+/*		exec('echo ' + configContent + ' > ~/.local/share/eosio/nodeeos/config/config.ini', ()=>{
 			console.log("Configuration file has been created");
 			return cb && cb(configContent);
-		});
+		});*/
+
+
+		fs.writeFileSync(configPath, configContent);
+
+		return cb && cb(configContent);
 
 	}
 
