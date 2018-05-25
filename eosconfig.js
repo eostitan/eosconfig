@@ -7,6 +7,7 @@ var request = require("request");
 var cjson = require("canonicaljson");
 var eos = require("eosjs-ecc");
 var async = require("async");
+var path = require("path");
 
 function main(){
 
