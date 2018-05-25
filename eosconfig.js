@@ -483,16 +483,15 @@ function main(){
 
 			const nodeos = spawn('nohup', command.arguments);
 
-			nodeos.stdout.setEncoding('utf8');
 			nodeos.stderr.setEncoding('utf8');
-			nodeos.stdout.on('data', (chunk) => {
-				console.log(chunk)
-			});
 
 			nodeos.stderr.on('data', (chunk) => {
-				//trap "replay or resync required";
+				//TODO:
+				//trap replay or resync required (error);
+				//trap not producing block because I don't have the private key (error)
+				//trap Produced block (success)
 
-				console.log(chunk)
+				//console.log(chunk)
 
 			});
 
@@ -500,7 +499,7 @@ function main(){
 			  console.log('error: ' + err);
 			});
 
-			return setTimeout(cb, 10000);
+			return setTimeout(cb, 5000); //replace by smart stderr handling
 
 		}
 		else if (command.command=="generate_contract_keys"){
