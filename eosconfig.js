@@ -214,6 +214,8 @@ function main(){
 
 				exec('cleos wallet import ' + masterPrivateKey, (e, stdout, stderr)=> {
 
+					console.log("Key imported.");
+					
 					keyRing[keyName] = {
 						private: masterPrivateKey,
 						public: masterPublicKey
@@ -232,6 +234,8 @@ function main(){
 				console.log("pubKey: " +  pubKey);
 
 				exec('cleos wallet import ' + privKey, (e, stdout, stderr)=> {
+
+					console.log("Key imported.");
 					
 					keyRing[keyName] = {
 						private: privKey,
