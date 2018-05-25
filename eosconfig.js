@@ -452,7 +452,6 @@ function main(){
 
 			console.log("Starting nodeos...", command);
 			command.arguments.unshift("nodeos");
-			command.arguments.push("&");
 
 			const nodeos = spawn('nohup', command.arguments);
 
