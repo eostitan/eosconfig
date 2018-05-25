@@ -402,6 +402,12 @@ function main(){
 		
 	}
 
+	function executeChainBIOS(boot){
+
+		console.log("BOOT SEQUENCE: ", boot);
+
+	}
+
 	function signRequest(rq, key, append){
 
 		let newRq = JSON.parse(JSON.stringify(rq));
@@ -422,8 +428,6 @@ function main(){
 			//if user wants to join an existing network
 
 			if (newNetwork) {
-
-				console.log("creating");
 
 		    promptNetworkName("create", (name)=>{
 					//if user wants to create a new network
@@ -448,7 +452,11 @@ function main(){
 											
 												console.log("CONFIG:", JSON.stringify(res, null, 2));
 
-												console.log('Configuration of eosio is complete.');
+												console.log('Configuration is complete.');
+
+												executeChainBIOS(res.boot, ()=>{
+													console.log("Bootstrapping is complete.");
+												});
 
 											});
 										});
@@ -464,8 +472,6 @@ function main(){
 			}
 			else {
 
-				console.log("joining");
-				   
 		    promptNetworkName("join", (name)=>{
 
 					createWallet(()=>{
@@ -481,7 +487,7 @@ function main(){
 									createGenesis(res.genesis, (genesis)=>{
 										createConfig(()=>{
 
-											console.log('Configuration of eosio is complete.');
+											console.log('Configuration is complete.');
 
 										});			
 									});			
