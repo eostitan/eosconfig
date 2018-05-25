@@ -454,6 +454,9 @@ function main(){
 			command.arguments.push("&");
 
 			const nodeos = spawn('nohup nodeos', command.arguments);
+			nodeos.on('error', function(err) {
+			  console.log('error: ' + err);
+			});
 
 			return setTimeout(cb, 1000);
 
