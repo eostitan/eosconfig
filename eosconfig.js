@@ -24,6 +24,7 @@ function main(){
 
 	const repoPath = process.env['HOME'] + '/EOSTITAN/eos';
 
+	function run(){
 
 		git(repoPath).pull('origin', 'master');
 
