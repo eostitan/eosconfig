@@ -302,7 +302,7 @@ function main(){
 
 	function pushNetworkConfiguration(configuration, cb){
 
-		let data = signRequest(configuration, masterPrivateKey, true);
+		let data = configuration; //signRequest(configuration, masterPrivateKey, true);
 
 		request({url: serverURL + '/addnetwork', method: 'POST', json: data}, function(err, res, body){
 
@@ -402,9 +402,9 @@ function main(){
 		
 	}
 
-	function executeChainBIOS(boot){
+	function executeChainBIOS(bootSequence){
 
-		console.log("BOOT SEQUENCE: ", boot);
+		console.log("BOOT SEQUENCE: ", bootSequence);
 
 	}
 
@@ -440,6 +440,7 @@ function main(){
 
 										let config = {
 											network_name:name,
+											initial_key:masterPublicKey,
 											tag:chosenTag || "dawn-v4.1.0",
 											genesis: genesis
 										}
@@ -454,7 +455,7 @@ function main(){
 
 												console.log('Configuration is complete.');
 
-												executeChainBIOS(res.boot, ()=>{
+												executeChainBIOS(res.sequence, ()=>{
 													console.log("Bootstrapping is complete.");
 												});
 
