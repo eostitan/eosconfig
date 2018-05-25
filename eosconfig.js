@@ -569,8 +569,7 @@ function main(){
 				return cb();
 
 			});
-
-			return cb();
+			
 		}	
 
 	}
