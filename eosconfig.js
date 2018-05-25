@@ -260,16 +260,16 @@ function main(){
 			else if (stderr){
 				console.log(stderr);
 			}
-			
+
 			return cb();
 
 		});
 
 	}
 
-	function prepareContract(info, creator, cb){
+	function prepareContract(info, cb){
 		createKeys(info.name, function(){
-			createAccount(info.name, creator, keyRing[info.name].public, cb);
+			createAccount(info.name, info.creator, keyRing[info.name].public, cb);
 		});
 	}
 
@@ -462,6 +462,8 @@ function main(){
 		else if (command.command=="generate_contract_keys"){
 
 			console.log("Generating contracts keys and accounts...");
+			
+			command.keys = command.keys.map(function(k){k.creator = command.account;return k});
 
 			async.eachSeries(command.keys, prepareContract, function(err,res){
 				console.log("KEYRING:", keyRing);
