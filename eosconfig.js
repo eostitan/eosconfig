@@ -313,7 +313,7 @@ function main(){
 				}
 			};
 
-			genesisContent.initial_timestamp = JSON.stringify(new Date()).replace('Z', "");
+			genesisContent.initial_timestamp = JSON.stringify(new Date()).replace('Z', "").replace('"', "").replace('"', "");
 
 			console.log("genesisContent.initial_timestamp", genesisContent.initial_timestamp);
 
