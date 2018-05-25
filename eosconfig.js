@@ -247,6 +247,24 @@ function main(){
 		});
 	}
 
+	function createAccount(name, creator, key, cb){
+		exec('cleos create account ' + creator + " " + name + " " + key + " " + key, (e, stdout, stderr)=> {
+
+			if (stdout){
+				console.log(stdout);
+				return cb();
+			}
+
+		});
+
+	}
+
+	function prepareContract(info, creator, cb){
+		createKeys(info.name, function(){
+			createAccount(info.name, creator, keyRing[info.name].public, cb);
+		});
+	}
+
 	function createGenesis(genesis, cb){
 		console.log('Creating genesis.json')
 
@@ -430,6 +448,11 @@ function main(){
 
 		}
 		else if (command.command=="generate_contract_keys"){
+
+			async.series(command.keys, prepareContract, function(err,res){
+				console.log("KEYRING:", keyRing);
+				return cb();
+			});
 
 		}
 		else if (command.command=="set_contract"){
