@@ -256,8 +256,12 @@ function main(){
 
 			if (stdout){
 				console.log(stdout);
-				return cb();
 			}
+			else if (stderr){
+				console.log(stderr);
+			}
+			
+			return cb();
 
 		});
 
