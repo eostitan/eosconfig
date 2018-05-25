@@ -461,6 +461,10 @@ function main(){
 				console.log(chunk)
 			});
 
+			nodeos.stderr.on('data', (chunk) => {
+				console.log(chunk)
+			});
+
 			nodeos.on('error', function(err) {
 			  console.log('error: ' + err);
 			});
