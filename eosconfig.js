@@ -315,6 +315,8 @@ function main(){
 
 			genesisContent.initial_timestamp = JSON.stringify(new Date()).replace('Z\\"', "").replace('\\"', "");
 
+			console.log("genesisContent.initial_timestamp", genesisContent.initial_timestamp);
+
 			genesisContent.initial_key = masterPublicKey;
 			genesisContent.initial_chain_id = Date.now().toString();
 
