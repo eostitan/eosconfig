@@ -20,11 +20,10 @@ function main(){
 	var serverURL = "http://127.0.0.1:3000";
 
 	var walletKey;
-	console.log('Eos setup brought to you by EOSTITAN.com');
+	console.log('EOS.IO setup by eostitan.com');
 
 	const repoPath = process.env['HOME'] + '/EOSTITAN/eos';
 
-	function run(){
 
 		git(repoPath).pull('origin', 'master');
 
@@ -194,7 +193,7 @@ function main(){
 			exec('cleos wallet unlock --password ' + walletKey, ()=> {cb();});
 	}
 
-	function createKeys(keyName, isInitialKey, cb){
+	function createKeys(keyName, cb){
 		exec('cleos create key', (e, stdout, stderr)=> {
 
 			var keys = stdout;
@@ -212,14 +211,13 @@ function main(){
 				console.log('Both keys have been saved to ~/EOSTITAN/')
 
 				exec('cleos wallet import ' + masterPrivateKey, (e, stdout, stderr)=> {
-					
-					if (isInitialKey){
-						promptAnyKey("Please copy this public key into eosio-server/config/server.json on your server and then press any key to continue.", function(res){
-							return cb();
-						});
-					}
-					else return cb();
 
+					keyRing[keyName] = {
+						private: masterPrivateKey,
+						public: masterPublicKey
+					}
+
+					return cb();
 				});
 
 			}
@@ -402,9 +400,9 @@ function main(){
 		
 	}
 
-	function executeChainBIOS(bootSequence){
+	function configureChainBIOS(boot){
 
-		console.log("BOOT SEQUENCE: ", bootSequence);
+		console.log("BOOT SEQUENCE: ", boot.sequence);
 
 	}
 
@@ -453,9 +451,9 @@ function main(){
 											
 												console.log("CONFIG:", JSON.stringify(res, null, 2));
 
-												console.log('Configuration is complete.');
+												console.log('Node configuration is complete.');
 
-												executeChainBIOS(res.sequence, ()=>{
+												configureChainBIOS(res.boot, ()=>{
 													console.log("Bootstrapping is complete.");
 												});
 
@@ -488,7 +486,7 @@ function main(){
 									createGenesis(res.genesis, (genesis)=>{
 										createConfig(()=>{
 
-											console.log('Configuration is complete.');
+											console.log('Node configuration is complete.');
 
 										});			
 									});			
