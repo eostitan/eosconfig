@@ -375,7 +375,7 @@ function main(){
 		configContent += "\nproducer-name = " + name ; 
 		configContent += '\nprivate-key = ["' + masterPublicKey + '","' + masterPrivateKey + '"]'; 
 
-		exec('echo ' + file + ' > ~/.local/share/eosio/nodeeos/config/config.ini', ()=>{
+		exec('echo ' + configContent + ' > ~/.local/share/eosio/nodeeos/config/config.ini', ()=>{
 			return cb && cb(configContent);
 		});
 
