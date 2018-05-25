@@ -313,7 +313,8 @@ function main(){
 				}
 			};
 
-			genesisContent.initial_timestamp = new Date();
+			genesisContent.initial_timestamp = new Date().toString().replace("Z", "");
+
 			genesisContent.initial_key = masterPublicKey;
 			genesisContent.initial_chain_id = Date.now().toString();
 
