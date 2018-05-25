@@ -421,7 +421,7 @@ function main(){
 		
 	}
 
-	function configureChainBIOS(boot){
+	function configureChainBIOS(boot, cb){
 
 		console.log("BOOT SEQUENCE: ", boot.sequence);
 
@@ -433,6 +433,7 @@ function main(){
 
 		async.eachSeries(sortedCommands, executeBIOSCommand, function(err,res){
 			console.log("BIOS BOOT SEQUENCE COMPLETED.");
+			return cb();
 		});
 
 	}
@@ -457,11 +458,11 @@ function main(){
 
 		}
 		else if (command.command=="set_contract"){
-
+			return cb();
 		}
 		else if (command.command=="push_action"){
-
-		}
+			return cb();
+		}	
 
 	}
 
