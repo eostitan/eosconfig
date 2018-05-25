@@ -433,7 +433,7 @@ function main(){
 					//todo : check if wallet already exists, if it does, reuse the master key instead of creating a new one
 					createWallet(()=>{
 						unlockWallet(()=>{
-							createKeys("master", true, ()=>{
+							createKeys("master", ()=>{
 								createGenesis(null, (genesis)=>{
 									createConfig(()=>{
 
@@ -476,7 +476,7 @@ function main(){
 
 					createWallet(()=>{
 						unlockWallet(()=>{
-							createKeys("master", false, ()=>{
+							createKeys("master",  ()=>{
 
 								fetchNetworkConfiguration((err, res)=>{
 
