@@ -325,6 +325,7 @@ function main(){
 		else genesisContent = genesis;
 
 		exec('echo ' + genesisContent + ' > ~/.local/share/eosio/nodeeos/config/genesis.json', ()=>{
+			console.log("Genesis file has been created");
 			return cb && cb(genesisContent);
 		});
 
@@ -377,6 +378,7 @@ function main(){
 		configContent += '\nprivate-key = ["' + masterPublicKey + '","' + masterPrivateKey + '"]'; 
 
 		exec('echo ' + configContent + ' > ~/.local/share/eosio/nodeeos/config/config.ini', ()=>{
+			console.log("Configuration file has been created");
 			return cb && cb(configContent);
 		});
 
