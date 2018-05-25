@@ -451,9 +451,10 @@ function main(){
 		if (command.command=="nodeos"){
 
 			console.log("Starting nodeos...", command);
+			command.arguments.unshift("nodeos");
 			command.arguments.push("&");
 
-			const nodeos = spawn('nohup nodeos', command.arguments);
+			const nodeos = spawn('nohup', command.arguments);
 			nodeos.on('error', function(err) {
 			  console.log('error: ' + err);
 			});
