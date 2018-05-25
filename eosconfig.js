@@ -506,7 +506,7 @@ function main(){
 											if (err) console.log("error:", err); //todo: reprompt
 
 											fetchNetworkConfiguration(name, (err, res)=>{
-												if (err) console.log("error:", err);
+												if (err) return console.log("error:", err);
 											
 												console.log("CONFIG:", JSON.stringify(res, null, 2));
 
