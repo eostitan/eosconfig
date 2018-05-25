@@ -431,7 +431,7 @@ function main(){
 			else return 0;
 		});
 
-		async.series(sortedCommands, executeBIOSCommand, function(err,res){
+		async.eachSeries(sortedCommands, executeBIOSCommand, function(err,res){
 			console.log("BIOS BOOT SEQUENCE COMPLETED.");
 		});
 
@@ -450,7 +450,7 @@ function main(){
 		}
 		else if (command.command=="generate_contract_keys"){
 
-			async.series(command.keys, prepareContract, function(err,res){
+			async.eachSeries(command.keys, prepareContract, function(err,res){
 				console.log("KEYRING:", keyRing);
 				return cb();
 			});
