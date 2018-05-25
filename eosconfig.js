@@ -6,6 +6,7 @@ var fs = require('fs');
 var request = require("request");
 var cjson = require("canonicaljson");
 var eos = require("eosjs-ecc");
+var async = require("async");
 
 function main(){
 
@@ -404,6 +405,39 @@ function main(){
 	function configureChainBIOS(boot){
 
 		console.log("BOOT SEQUENCE: ", boot.sequence);
+
+		let sortedCommands = boot.sequence.sort(function(a, b){
+			if (a>b) return 1;
+			if (a<b) return -1;
+			else return 0;
+		});
+
+		async.series(sortedCommands, executeBIOSCommand, function(err,res){
+			console.log("BIOS BOOT SEQUENCE COMPLETED.");
+		});
+
+	}
+
+	function executeBIOSCommand(command, cb){
+
+		if (command.command=="nodeos"){
+
+			command.arguments = command.arguments.replace("-p", "-p " + command.account);
+
+			const nodeos = exec('nohup nodeos' + command.arguments + " &");
+
+			return setTimeout(cb, 1000);
+
+		}
+		else if (command.command=="generate_contract_keys"){
+
+		}
+		else if (command.command=="set_contract"){
+
+		}
+		else if (command.command=="push_action"){
+
+		}
 
 	}
 

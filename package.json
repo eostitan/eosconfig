@@ -11,7 +11,8 @@
   "dependencies": {
     "simple-git": "^1.92.0",
     "request": "*",
-    "canonicaljson":"*",
-    "eosjs-ecc":"*"
+    "canonicaljson": "*",
+    "eosjs-ecc": "*",
+    "async": "*"
   }
 }
