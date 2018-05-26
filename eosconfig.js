@@ -114,9 +114,10 @@ function main(){
 			input2.prompt();
 			input2.on('line', function(line) {
 				console.log("line", line, line.length)
-			    if (line.toLowerCase() == 'y' ||  line.toLowerCase() == 'yes')
+			    if (line.toLowerCase() == 'y' ||  line.toLowerCase() == 'yes'){
 			    	input2.close();
 			    	buildEos(cb);
+			    }
 			    else if  (line == 0 || line.toLowerCase() == 'n' ||  line.toLowerCase() == 'no')
 			    	input2.close();
 			    	return cb && cb();
