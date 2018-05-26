@@ -193,9 +193,8 @@ function main(){
 	}
 
 	function launchKeosd(cb){
-		keosd  = exec('keosd', (e, stdout, stderr)=> {
-			return cb && cb();
-		});
+		keosd  = exec('keosd');
+		return cb && cb();
 	}
 
 	function killKeosd(cb){
@@ -729,13 +728,18 @@ function main(){
 						else completeEOSIOConfiguration();
 
 						function completeEOSIOConfiguration(){
-
+							console.log('Completing EOSIO config')
 							//todo : check if wallet already exists, if it does, reuse the master key instead of creating a new one
 							launchKeosd(()=>{
+								console.log('Launched keosd');
 								killKeosd(()=>{
+									console.log('Killed keosd');
 									createWallet(()=>{
+										console.log('Wallet created');
 										unlockWallet(()=>{
+											console.log('Wallet unlocked');
 											createKeys("master", ()=>{
+												console.log('Keys created');
 												createGenesis(null, (genesis)=>{
 													createConfig("eosio", ()=>{
 
