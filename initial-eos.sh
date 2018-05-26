@@ -44,7 +44,7 @@ else
 	cd EOSTITAN;
 
 	git clone https://github.com/EOSIO/eos --recursive;
-	git clone https://github.com/cryptomechanics/eosconfig;
+	git clone https://github.com/eostitan/eosconfig;
 	cd eosconfig;
 	npm install;
 	node eosconfig.js;
