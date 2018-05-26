@@ -31,7 +31,7 @@ function main(){
 	
 	console.log('EOS.IO configuration utility by eostitan.com');
 
-	const eosTitanPath = path.join(process.env['HOME'], "EOSTITAN";
+	const eosTitanPath = path.join(process.env['HOME'], "EOSTITAN");
 	const repoPath = path.join(process.env['HOME'], "EOSTITAN", "eos");
 	const dataPath = path.join(process.env['HOME'], ".local", "share", "eosio", "nodeos", "data");
 	const genesisPath = path.join(process.env['HOME'], ".local", "share", "eosio", "nodeos", "config", "genesis.json");
