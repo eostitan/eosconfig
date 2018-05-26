@@ -27,7 +27,7 @@ then
 	echo Inital setup previously completed, launching eos config;
 	cd EOSTITAN;
 	cd eosconfig;
-	git pull;
+	git pull --recursive;
 	npm install;
 	node eosconfig.js;
 else
