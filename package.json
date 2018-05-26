@@ -23,6 +23,7 @@
     "canonicaljson": "*",
     "eosjs-ecc": "*",
     "async": "*",
-    "colors": "*"
+    "colors": "*",
+    "mkdirp": "*"
   }
 }

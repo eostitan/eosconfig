@@ -29,13 +29,23 @@ function main(){
 
 	var walletKey;
 	
-	console.log('EOS.IO configuration utility by eostitan.com');
+	console.log('EOS.IO configuration utility by eostitan.com'.green);
+
 
 	const eosTitanPath = path.join(process.env['HOME'], "EOSTITAN");
-	const repoPath = path.join(process.env['HOME'], "EOSTITAN", "eos");
-	const dataPath = path.join(process.env['HOME'], ".local", "share", "eosio", "nodeos", "data");
-	const genesisPath = path.join(process.env['HOME'], ".local", "share", "eosio", "nodeos", "config", "genesis.json");
-	const configPath = path.join(process.env['HOME'], ".local", "share", "eosio", "nodeos", "config", "config.ini");
+	const repoPath = path.join(eosTitanPath, "eos");
+
+	const eosioPath = path.join(process.env['HOME'], ".local", "share", "eosio");
+	const nodeosPath = path.join(eosioPath, "nodeos");
+	const dataPath = path.join(nodeosPath, "data");
+	const configPath = path.join(nodeosPath, "config");
+	const configFile = path.join(nodeosPath, "config", "config.ini");
+	const genesisFile = path.join(nodeosPath, "config", "genesis.json");
+
+
+	mkdirp.sync(eosioPath);
+	mkdirp.sync(nodeosPath);
+	mkdirp.sync(configPath);
 
 	function runBuildScript(cb){
 
@@ -187,14 +197,14 @@ function main(){
 				walletKey = stdout.split('"');
 				walletKey = walletKey[1];
 				console.log("walletKey", walletKey)
-				exec('echo ' + walletKey + ' > ~/EOSTITAN/defaultWallet.key')
+				exec('echo ' + walletKey + ' > ' + eosTitanPath + '/defaultWallet.key')
 				cb();
 			}
 			if (stderr){
 				if (stderr.includes('Wallet already exists')){
 					console.log('Wallet exists, checking for saved key...');
 
-					exec('cat ~/EOSTITAN/defaultWallet.key', (e, stdout, stderr)=>{
+					exec('cat ~/'  + eosTitanPath + '/defaultWallet.key', (e, stdout, stderr)=>{
 						if (stderr){
 							//TODO prompt user to enter password
 							console.log('cant find wallet password')
@@ -233,11 +243,11 @@ function main(){
 				masterPrivateKey = keys[1].split('\n')[0].trim();
 				masterPublicKey = keys[2].split('\n')[0].trim();
 
-				console.log("masterPrivateKey: " + masterPrivateKey);
+				//console.log("masterPrivateKey: " + masterPrivateKey);
 				console.log("masterPublicKey: " +  masterPublicKey);
-				exec('echo ' + masterPrivateKey + ' > ~/EOSTITAN/masterPrivateKey.key');
-				exec('echo ' + masterPublicKey + ' > ~/EOSTITAN/masterPublicKey.key');
-				console.log('Both keys have been saved to ~/EOSTITAN/')
+				exec('echo ' + masterPrivateKey + ' > ~/'  + eosTitanPath + '/masterPrivateKey.key');
+				exec('echo ' + masterPublicKey + ' > ~/'  + eosTitanPath + '/masterPublicKey.key');
+				//console.log('Both keys have been saved to ~/EOSTITAN/')
 
 				exec('cleos wallet import ' + masterPrivateKey, (e, stdout, stderr)=> {
 
@@ -257,7 +267,7 @@ function main(){
 				var privKey = keys[1].split('\n')[0].trim();
 				var pubKey = keys[2].split('\n')[0].trim();
 
-				console.log("privKey: " + privKey);
+				//console.log("privKey: " + privKey);
 				console.log("pubKey: " +  pubKey);
 
 				exec('cleos wallet import ' + privKey, (e, stdout, stderr)=> {
@@ -335,7 +345,7 @@ function main(){
 
 			genesisContent.initial_timestamp = JSON.stringify(new Date()).replace('Z', "").replace('"', "").replace('"', "");
 
-			console.log("genesisContent.initial_timestamp", genesisContent.initial_timestamp);
+			//console.log("genesisContent.initial_timestamp", genesisContent.initial_timestamp);
 
 			genesisContent.initial_key = masterPublicKey;
 			genesisContent.initial_chain_id = Date.now().toString();
@@ -349,7 +359,7 @@ function main(){
 		}
 		else genesisContent = genesis;
 
-		fs.writeFileSync(genesisPath, JSON.stringify(genesisContent, null, 2));
+		fs.writeFileSync(genesisFile, JSON.stringify(genesisContent, null, 2));
 
 		return cb && cb(genesisContent);
 
@@ -369,9 +379,9 @@ function main(){
 			if (err) console.log("ERROR:", err);
 
 			if (body && !body.error){
-				console.log("");
-				console.log("pushNetworkConfiguration");
-				console.log(JSON.stringify(body, null, 2));
+				//console.log("");
+				console.log("pushed network configuration");
+				//console.log(JSON.stringify(body, null, 2));
 				return cb && cb(null, body);
 			}
 			else return cb && cb({error: err || body.error});
@@ -385,9 +395,9 @@ function main(){
 		request({url: serverURL + '/networks/' + name, method: 'GET', json:true}, function(err, res, body){
 
 			if (body){
-				console.log("");
-				console.log("fetchNetworkConfiguration");
-				console.log(JSON.stringify(body, null, 2));
+				//console.log("");
+				console.log("fetched network configuration");
+				//console.log(JSON.stringify(body, null, 2));
 
 				return cb && cb(null, body);
 			}
@@ -413,7 +423,7 @@ function main(){
 		});*/
 
 
-		fs.writeFileSync(configPath, configContent);
+		fs.writeFileSync(configFile, configContent);
 
 		return cb && cb(configContent);
 
@@ -546,7 +556,7 @@ function main(){
 
 	function configureChainBIOS(boot, cb){
 
-		console.log("BOOT SEQUENCE: ", boot.sequence);
+		//console.log("BOOT SEQUENCE: ", boot.sequence);
 
 		let sortedCommands = boot.sequence.sort(function(a, b){
 			if (a>b) return 1;
@@ -555,7 +565,7 @@ function main(){
 		});
 
 		async.eachSeries(sortedCommands, executeBIOSCommand, function(err,res){
-			console.log("BIOS BOOT SEQUENCE COMPLETED.");
+			console.log("BIOS BOOT SEQUENCE EXECUTION COMPLETED.".green);
 			return cb();
 		});
 
@@ -726,7 +736,7 @@ function main(){
 														console.log('Node configuration is complete.');
 
 														configureChainBIOS(res.network.boot, ()=>{
-															console.log("Bootstrapping is complete.");
+															console.log("Blockchain bootstrapping is complete.");
 														});
 
 													});
