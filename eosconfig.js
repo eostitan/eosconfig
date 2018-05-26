@@ -663,7 +663,8 @@ function main(){
 
 		console.log('Configuring EOS');
 
-		//todo: check before cloning 
+		//todo: allow set up with configuration file instead of prompts
+		//todo: no rebuild necessary if we used git pull and are already up to date
 		//if (fs.existsSync(repoPath)){
 
 		//	promptRebuildEOS((rebuild)=>{
