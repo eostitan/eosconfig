@@ -599,6 +599,7 @@ function main(){
 			console.log("Starting nodeos...", command);
 			command.arguments.unshift("nodeos");
 
+			command.arguments.push("--genesis-json");
 			command.arguments.push(genesisFile);
 
 			const nodeos = spawn('nohup', command.arguments);
