@@ -194,7 +194,12 @@ function main(){
 
 	function launchKeosd(cb){
 		keosd  = exec('keosd');
-		return cb && cb();
+
+		setTimeout(function(){
+
+			return cb && cb();
+
+		}, 1000);
 	}
 
 	function killKeosd(cb){
