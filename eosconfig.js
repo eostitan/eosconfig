@@ -31,12 +31,18 @@ function main(){
 	
 	console.log('EOS.IO configuration utility by eostitan.com');
 
+	const eosTitanPath = path.join(process.env['HOME'], "EOSTITAN";
 	const repoPath = path.join(process.env['HOME'], "EOSTITAN", "eos");
 	const dataPath = path.join(process.env['HOME'], ".local", "share", "eosio", "nodeos", "data");
 	const genesisPath = path.join(process.env['HOME'], ".local", "share", "eosio", "nodeos", "config", "genesis.json");
 	const configPath = path.join(process.env['HOME'], ".local", "share", "eosio", "nodeos", "config", "config.ini");
 
 	function runBuildScript(cb){
+
+		if (!fs.existsSync(repoPath)){
+			fs.mkdirSync(eosTitanPath);
+			fs.mkdirSync(repoPath);
+		}
 
 		git(repoPath).pull('origin', 'master');
 
@@ -730,7 +736,6 @@ function main(){
 
 				}
 				else {
-
 
 			    promptNetworkName("join", (name)=>{
 			    	promptNodeName((nodeName)=>{
