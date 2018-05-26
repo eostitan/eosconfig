@@ -788,21 +788,25 @@ function main(){
 								else completeNodeConfiguration();
 
 								function completeNodeConfiguration(){
+									launchKeosd(()=>{
+										killKeosd(()=>{
+											createWallet(()=>{
+												unlockWallet(()=>{
+													createKeys("master",  ()=>{
 
-									createWallet(()=>{
-										unlockWallet(()=>{
-											createKeys("master",  ()=>{
+														console.log("CONFIG:", JSON.stringify(config, null, 2));
 
-												console.log("CONFIG:", JSON.stringify(config, null, 2));
-
-												createGenesis(config.genesis, (genesis)=>{
-													createConfig(nodeName, ()=>{
-														console.log('Node configuration is complete.');
-													});			
-												});			
+														createGenesis(config.genesis, (genesis)=>{
+															createConfig(nodeName, ()=>{
+																console.log('Node configuration is complete.');
+															});			
+														});			
+													});
+												});
 											});
 										});
 									});
+
 
 								}
 
