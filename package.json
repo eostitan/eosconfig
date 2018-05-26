@@ -6,13 +6,23 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "author": "Shaq Kheder",
+  "author": {
+    "name": "Shaq Kheder",
+    "email": "shaq@cryptomechanics.com"
+  },
+  "contributors": [
+    {
+      "name": "Guillaume Babin-Tremblay",
+      "email": "guillaume@cryptomechanics.com"
+    }
+  ],
   "license": "ISC",
   "dependencies": {
     "simple-git": "^1.92.0",
     "request": "*",
     "canonicaljson": "*",
     "eosjs-ecc": "*",
-    "async": "*"
+    "async": "*",
+    "colors": "*"
   }
 }

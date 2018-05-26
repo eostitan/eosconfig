@@ -8,6 +8,7 @@ var cjson = require("canonicaljson");
 var eos = require("eosjs-ecc");
 var async = require("async");
 var path = require("path");
+var colors = require("colors");
 
 function main(){
 
@@ -23,12 +24,15 @@ function main(){
 
 	var keyRing = {};
 
-	var serverURL = "http://127.0.0.1:3000";
+	var serverURL = "http://discovery.eostitan.com:9273";
+	var defaultTag = "dawn-v4.2.0";
 
 	var walletKey;
-	console.log('EOS.IO setup by eostitan.com');
+	
+	console.log('EOS.IO configuration utility by eostitan.com');
 
-	const repoPath = process.env['HOME'] + '/EOSTITAN/eos';
+	const repoPath = path.join(process.env['HOME'], "EOSTITAN", "eos");
+	const dataPath = path.join(process.env['HOME'], ".local", "share", "eosio", "nodeos", "data");
 	const genesisPath = path.join(process.env['HOME'], ".local", "share", "eosio", "nodeos", "config", "genesis.json");
 	const configPath = path.join(process.env['HOME'], ".local", "share", "eosio", "nodeos", "config", "config.ini");
 
@@ -467,8 +471,14 @@ function main(){
 	}
 
 
-	function deleteChainData(){
-		
+	function deleteChainData(cb){
+	
+		exec('rm -r ' , (e, stdout, stderr)=> {
+
+			return cb();
+
+		});
+
 	}
 
 	function configureChainBIOS(boot, cb){
@@ -569,7 +579,7 @@ function main(){
 				return cb();
 
 			});
-			
+
 		}	
 
 	}
@@ -607,7 +617,7 @@ function main(){
 										let config = {
 											network_name:name,
 											initial_key:masterPublicKey,
-											tag:chosenTag || "dawn-v4.1.0",
+											tag:chosenTag || defaultTag,
 											genesis: genesis
 										}
 
