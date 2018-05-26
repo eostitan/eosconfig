@@ -41,8 +41,8 @@ function main(){
 	const nodeosPath = path.join(eosioPath, "nodeos");
 	const dataPath = path.join(nodeosPath, "data");
 	const configPath = path.join(nodeosPath, "config");
-	const configFile = path.join(nodeosPath, "config", "config.ini");
-	const genesisFile = path.join(nodeosPath, "config", "genesis.json");
+	const configFile = path.join(configPath, "config.ini");
+	const genesisFile = path.join(configPath, "genesis.json");
 
 
 	console.log("Creating folders...");
