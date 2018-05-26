@@ -193,11 +193,8 @@ function main(){
 	}
 
 	function launchKeosd(cb){
-		keosd  = exec('keosd', (e, stdout, stderr)=> {
-			console.log("stdout", stdout)
-			console.log("stderr", stderr)
-			setTiemout(()=>{return cb && cb();},1000);
-		});
+		keosd  = exec('keosd');
+		return cb && cb();
 	}
 
 	function killKeosd(cb){
