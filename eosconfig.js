@@ -36,7 +36,7 @@ function main(){
 	const genesisPath = path.join(process.env['HOME'], ".local", "share", "eosio", "nodeos", "config", "genesis.json");
 	const configPath = path.join(process.env['HOME'], ".local", "share", "eosio", "nodeos", "config", "config.ini");
 
-	function run(){
+	function runBuildScript(cb){
 
 		git(repoPath).pull('origin', 'master');
 
@@ -90,7 +90,7 @@ function main(){
 							whereis.on('close', function (code) {
 							    console.log('exit code : ' + code);
 									if (code == 0)
-										checkTags();
+										checkTags(cb);
 							});
 					}
 				});
@@ -100,7 +100,7 @@ function main(){
 
 	}	
 
-	function checkTags(){
+	function checkTags(cb){
 		if (chosenTag == currentTag){
 			var input2 = readline.createInterface(process.stdin, process.stdout);
 			input2.setPrompt(chosenTag + ' has been checked out previously, do you want to re-run the eosio_build? (N)');
@@ -108,9 +108,9 @@ function main(){
 			input2.on('line', function(line) {
 				console.log("line", line, line.length)
 			    if (line.toLowerCase() == 'y' ||  line.toLowerCase() == 'yes')
-			    	buildEos();
+			    	buildEos(cb);
 			    else if  (line == 0 || line.toLowerCase() == 'n' ||  line.toLowerCase() == 'no')
-			    	configureEos()
+			    	return cb && cb();
 			    else {
 			    	console.log('Please enter y or n')
 			    	input2.prompt();
@@ -120,11 +120,11 @@ function main(){
 
 		}
 		else{
-			buildEos();
+			buildEos(cb);
 		}
 	}
 
-	function buildEos(){
+	function buildEos(cb){
 		console.log('Checking out '+ chosenTag);
 		git(repoPath).checkout(chosenTag, ()=>{
 			console.log('Checkout of ' + chosenTag  + ' successful')
@@ -142,25 +142,25 @@ function main(){
 
 				eosbuild.on('close', (code) => {
 				  if (code == 0){
-				  	console.log('Build process completed successfully')
-				  	process.chdir(repoPath + '/build')
-					const eosMakeInstall = spawn('sudo',['make', 'install']);
-				  	eosMakeInstall.stdout.setEncoding('utf8');
-					eosMakeInstall.stdout.on('data', (chunk) => {
-						console.log(chunk)
-					});
-					eosMakeInstall.on('close', (code2) => {
-						if (code2 == 0){
-				  			console.log('Make install process completed successfully')
-				  			configureEos();
-						}
-				  		else
-				 			console.log("Error running make install, code: " + code2)
-					});
-				  }
-				 else
-				 	console.log("Error running make install, code: " + code)
+					  console.log('Build process completed successfully')
+					  process.chdir(repoPath + '/build')
+						const eosMakeInstall = spawn('sudo',['make', 'install']);
+					  eosMakeInstall.stdout.setEncoding('utf8');
+						
+						eosMakeInstall.stdout.on('data', (chunk) => {
+							console.log(chunk)
+						});
 
+						eosMakeInstall.on('close', (code2) => {
+							if (code2 == 0){
+					  		console.log('Make install process completed successfully')
+					  		return cb && cb();
+							}
+					  	else console.log("Error running make install, code: " + code2)
+						});
+
+				  }
+				 else console.log("Error running make install, code: " + code)
 				});
 			});
 
@@ -667,7 +667,7 @@ function main(){
 		}
 		else configureEos(true);
 
-		function configureEos(buildEOS){
+		function configureEos(build){
 
 			promptNetworkInfo((newNetwork)=>{
 				//if user wants to join an existing network
@@ -676,78 +676,98 @@ function main(){
 
 			    promptNetworkName("create", (name)=>{
 						//if user wants to create a new network
-						//todo : check if wallet already exists, if it does, reuse the master key instead of creating a new one
-						createWallet(()=>{
-							unlockWallet(()=>{
-								createKeys("master", ()=>{
-									createGenesis(null, (genesis)=>{
-										createConfig("eosio", ()=>{
-
-											let config = {
-												network_name:name,
-												initial_key:masterPublicKey,
-												tag:chosenTag || defaultTag,
-												genesis: genesis
-											}
-
-											pushNetworkConfiguration(config, (err, res)=>{
-												if (err) console.log("error:", err); //todo: reprompt
-
-												fetchNetworkConfiguration(name, (err, res)=>{
-													if (err) return console.log("error:", err);
-												
-													console.log("CONFIG:", JSON.stringify(res, null, 2));
-
-													console.log('Node configuration is complete.');
-
-													configureChainBIOS(res.network.boot, ()=>{
-														console.log("Bootstrapping is complete.");
-													});
-
-												});
-											});
+						if (build){
 							
-										});				
+							runBuildScript(()=>{
+								completeEOSIOConfiguration();
+							});
+							
+						}
+						else completeEOSIOConfiguration();
+
+						function completeEOSIOConfiguration(){
+
+							//todo : check if wallet already exists, if it does, reuse the master key instead of creating a new one
+							createWallet(()=>{
+								unlockWallet(()=>{
+									createKeys("master", ()=>{
+										createGenesis(null, (genesis)=>{
+											createConfig("eosio", ()=>{
+
+												let config = {
+													network_name:name,
+													initial_key:masterPublicKey,
+													tag:chosenTag || defaultTag,
+													genesis: genesis
+												}
+
+												pushNetworkConfiguration(config, (err, res)=>{
+													if (err) console.log("error:", err); //todo: reprompt
+
+													fetchNetworkConfiguration(name, (err, res)=>{
+														if (err) return console.log("error:", err);
+													
+														console.log("CONFIG:", JSON.stringify(res, null, 2));
+
+														console.log('Node configuration is complete.');
+
+														configureChainBIOS(res.network.boot, ()=>{
+															console.log("Bootstrapping is complete.");
+														});
+
+													});
+												});
+								
+											});				
+										});
 									});
 								});
 							});
-						});
+
+						}
 
 			    });
 
 				}
 				else {
 
+
 			    promptNetworkName("join", (name)=>{
-
 			    	promptNodeName((nodeName)=>{
-							createWallet(()=>{
-								unlockWallet(()=>{
-									createKeys("master",  ()=>{
 
-										fetchNetworkConfiguration((err, res)=>{
+							fetchNetworkConfiguration(name, (err, config)=>{
 
-											//todo : handle possible exception
-
-											console.log("CONFIG:", JSON.stringify(res, null, 2));
-
-											createGenesis(res.genesis, (genesis)=>{
-												createConfig(nodeName, ()=>{
-
-													console.log('Node configuration is complete.');
-
-												});			
-											});			
-
-										});
-
+								if (build){
+									
+									runBuildScript(()=>{
+										completeNodeConfiguration();
 									});
-								});
+									
+								}
+								else completeNodeConfiguration();
+
+								function completeNodeConfiguration(){
+
+									createWallet(()=>{
+										unlockWallet(()=>{
+											createKeys("master",  ()=>{
+
+												console.log("CONFIG:", JSON.stringify(config, null, 2));
+
+												createGenesis(config.genesis, (genesis)=>{
+													createConfig(nodeName, ()=>{
+														console.log('Node configuration is complete.');
+													});			
+												});			
+											});
+										});
+									});
+
+								}
+
 							});
 			    	});
-
 			    });
-
 				}
 
 			});
