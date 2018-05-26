@@ -405,6 +405,7 @@ function main(){
 		configContent += "\nagent-name = " + '"' + name + '"';
 		configContent += "\nproducer-name = " + name ; 
 		configContent += '\nprivate-key = ["' + masterPublicKey + '","' + masterPrivateKey + '"]'; 
+		configContent += "\n";
 
 /*		exec('echo ' + configContent + ' > ~/.local/share/eosio/nodeeos/config/config.ini', ()=>{
 			console.log("Configuration file has been created");
@@ -662,21 +663,22 @@ function main(){
 
 		console.log('Configuring EOS');
 
-		if (fs.existsSync(repoPath)){
+	
+		//if (fs.existsSync(repoPath)){
 
-			promptRebuildEOS((rebuild)=>{
-				buildEOS = rebuild;
-				if (rebuild==true) console.log("Rebuilding flag set to true");
-				if (fs.existsSync(dataPath)) {
-					promptDeleteData(()=>{
-						configureEos(rebuild);
-					});
-				}
-				else configureEos(rebuild);
+		//	promptRebuildEOS((rebuild)=>{
+		//		buildEOS = rebuild;
+		//		if (rebuild==true) console.log("Rebuilding flag set to true");
+		if (fs.existsSync(dataPath)) {
+			promptDeleteData(()=>{
+				configureEos(true);
 			});
-
 		}
 		else configureEos(true);
+		//	});
+
+		//}
+		//else configureEos(true);
 
 		function configureEos(build){
 
