@@ -118,9 +118,10 @@ function main(){
 			    	input2.close();
 			    	buildEos(cb);
 			    }
-			    else if  (line == 0 || line.toLowerCase() == 'n' ||  line.toLowerCase() == 'no')
+			    else if  (line == 0 || line.toLowerCase() == 'n' ||  line.toLowerCase() == 'no'){
 			    	input2.close();
 			    	return cb && cb();
+			    }
 			    else {
 			    	console.log('Please enter y or n')
 			    	input2.prompt();
