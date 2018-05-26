@@ -193,13 +193,16 @@ function main(){
 
 	function launchKeosd(cb){
 		keosd  = exec('keosd', (e, stdout, stderr)=> {
-			cb();
+			return cb && cb();
 		});
 	}
 
 	function killKeosd(cb){
 		if (keosd)
 			keosd.kill();
+
+		return cb && cb();
+		
 	}
 
 	function createWallet(cb){
