@@ -663,7 +663,7 @@ function main(){
 
 		console.log('Configuring EOS');
 
-	
+		//todo: check before cloning 
 		//if (fs.existsSync(repoPath)){
 
 		//	promptRebuildEOS((rebuild)=>{
@@ -685,7 +685,7 @@ function main(){
 			promptNetworkInfo((newNetwork)=>{
 				//if user wants to join an existing network
 
-				if (newNetwork) {
+				if (newNetwork==true) {
 
 			    promptNetworkName("create", (name)=>{
 						//if user wants to create a new network
