@@ -9,6 +9,7 @@ var eos = require("eosjs-ecc");
 var async = require("async");
 var path = require("path");
 var colors = require("colors");
+var mkdirp = require("mkdirp");
 
 function main(){
 
