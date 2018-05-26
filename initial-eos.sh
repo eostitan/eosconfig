@@ -1,6 +1,6 @@
 #!/bin/bash
 
-echo Eos Initial Setup brought to you by EOSTITAN.com
+echo EOS.IO configuration utility by eostitan.com
 
 
 function program_is_installed {

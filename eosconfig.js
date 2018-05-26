@@ -39,19 +39,20 @@ function main(){
 
 	function runBuildScript(cb){
 
-		if (!fs.existsSync(repoPath)){
+/*		if (!fs.existsSync(repoPath)){
 			fs.mkdirSync(eosTitanPath);
 			fs.mkdirSync(repoPath);
 		}
-
+*/
 		git(repoPath).pull('origin', 'master');
 
 		//check current tag
 		git(repoPath).raw(['describe', '--tags'], (err, res) => {
 			currentTag = res.trim();
+			console.log("Current tag is :", currentTag);
 		});
 
-		console.log(repoPath)
+		//console.log(repoPath)
 
 		exec('cd ' + repoPath + ' && git  tag', (e, stdout, stderr)=>{
 			console.log('d')
@@ -109,13 +110,15 @@ function main(){
 	function checkTags(cb){
 		if (chosenTag == currentTag){
 			var input2 = readline.createInterface(process.stdin, process.stdout);
-			input2.setPrompt(chosenTag + ' has been checked out previously, do you want to re-run the eosio_build? (N)');
+			input2.setPrompt(chosenTag + ' has been checked out previously, do you want to re-run the eosio_build (y/N)?');
 			input2.prompt();
 			input2.on('line', function(line) {
 				console.log("line", line, line.length)
 			    if (line.toLowerCase() == 'y' ||  line.toLowerCase() == 'yes')
+			    	input2.close();
 			    	buildEos(cb);
 			    else if  (line == 0 || line.toLowerCase() == 'n' ||  line.toLowerCase() == 'no')
+			    	input2.close();
 			    	return cb && cb();
 			    else {
 			    	console.log('Please enter y or n')
