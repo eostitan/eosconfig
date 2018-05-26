@@ -597,7 +597,7 @@ function main(){
 		if (command.command=="nodeos"){
 
 			console.log("Starting nodeos...", command);
-			command.arguments.unshift("nodeos");
+			//command.arguments.unshift("nodeos");
 
 			command.arguments.push("--genesis-json");
 			command.arguments.push(genesisFile);
@@ -605,7 +605,7 @@ function main(){
 			command.arguments.push("--config-dir");
 			command.arguments.push(configPath);
 
-			const nodeos = spawn('nohup', command.arguments);
+			const nodeos = spawn('nodeos', command.arguments);
 
 			nodeos.stderr.setEncoding('utf8');
 
