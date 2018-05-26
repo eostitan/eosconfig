@@ -580,8 +580,8 @@ function main(){
 		//console.log("BOOT SEQUENCE: ", boot.sequence);
 
 		let sortedCommands = boot.sequence.sort(function(a, b){
-			if (a>b) return 1;
-			if (a<b) return -1;
+			if (a.index>b.index) return 1;
+			if (a.index<b.index) return -1;
 			else return 0;
 		});
 
