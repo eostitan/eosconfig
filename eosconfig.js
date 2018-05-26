@@ -43,6 +43,8 @@ function main(){
 	const genesisFile = path.join(nodeosPath, "config", "genesis.json");
 
 
+	console.log("Creating folders...");
+	
 	mkdirp.sync(eosioPath);
 	mkdirp.sync(nodeosPath);
 	mkdirp.sync(configPath);
