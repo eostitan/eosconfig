@@ -194,7 +194,9 @@ function main(){
 
 	function launchKeosd(cb){
 		keosd  = exec('keosd', (e, stdout, stderr)=> {
-			return cb && cb();
+			console.log("stdout", stdout)
+			console.log("stderr", stderr)
+			setTiemout(()=>{return cb && cb();},1000);
 		});
 	}
 
