@@ -425,6 +425,28 @@ function main(){
 		});
 	}
 
+	function promptDeleteData(cb){
+		var input = readline.createInterface(process.stdin, process.stdout);
+		input.setPrompt("Data folder already exists. Would you like to delete it (Y/n)?");
+		input.prompt();
+		input.on('line', function(line) {
+			console.log("line", line, line.length)
+		    if (line == 0 || line.toLowerCase() == 'y' ||  line.toLowerCase() == 'yes'){
+				  input.close();
+				  return deleteChainData(cb);
+		    }
+		    else if  (line.toLowerCase() == 'n' ||  line.toLowerCase() == 'no'){
+				  input.close();
+		    	return cb();
+		    }
+		    else {
+		    	console.log('Please enter y or n')
+		    	input.prompt();
+		    }
+		}).on('close',function(){
+		});
+	}
+
 	function promptNodeName(cb){
 		var input = readline.createInterface(process.stdin, process.stdout);
 		input.setPrompt("Please enter your account name (to be created on the network). ");
@@ -473,7 +495,7 @@ function main(){
 
 	function deleteChainData(cb){
 	
-		exec('rm -r ' , (e, stdout, stderr)=> {
+		exec('rm -r ' + dataPath, (e, stdout, stderr)=> {
 
 			return cb();
 
@@ -600,88 +622,99 @@ function main(){
 
 		console.log('Configuring EOS');
 
-		promptNetworkInfo((newNetwork)=>{
-			//if user wants to join an existing network
+		if (fs.existsSync(dataPath)) {
+			promptDeleteData(()=>{
+				configureNetwork();
+			});
+		}
+		else configureNetwork();
 
-			if (newNetwork) {
+		function configureNetwork(){
 
-		    promptNetworkName("create", (name)=>{
-					//if user wants to create a new network
-					//todo : check if wallet already exists, if it does, reuse the master key instead of creating a new one
-					createWallet(()=>{
-						unlockWallet(()=>{
-							createKeys("master", ()=>{
-								createGenesis(null, (genesis)=>{
-									createConfig("eosio", ()=>{
+			promptNetworkInfo((newNetwork)=>{
+				//if user wants to join an existing network
 
-										let config = {
-											network_name:name,
-											initial_key:masterPublicKey,
-											tag:chosenTag || defaultTag,
-											genesis: genesis
-										}
+				if (newNetwork) {
 
-										pushNetworkConfiguration(config, (err, res)=>{
-											if (err) console.log("error:", err); //todo: reprompt
-
-											fetchNetworkConfiguration(name, (err, res)=>{
-												if (err) return console.log("error:", err);
-											
-												console.log("CONFIG:", JSON.stringify(res, null, 2));
-
-												console.log('Node configuration is complete.');
-
-												configureChainBIOS(res.network.boot, ()=>{
-													console.log("Bootstrapping is complete.");
-												});
-
-											});
-										});
-						
-									});				
-								});
-							});
-						});
-					});
-
-		    });
-
-			}
-			else {
-
-		    promptNetworkName("join", (name)=>{
-
-		    	promptNodeName((nodeName)=>{
+			    promptNetworkName("create", (name)=>{
+						//if user wants to create a new network
+						//todo : check if wallet already exists, if it does, reuse the master key instead of creating a new one
 						createWallet(()=>{
 							unlockWallet(()=>{
-								createKeys("master",  ()=>{
+								createKeys("master", ()=>{
+									createGenesis(null, (genesis)=>{
+										createConfig("eosio", ()=>{
 
-									fetchNetworkConfiguration((err, res)=>{
+											let config = {
+												network_name:name,
+												initial_key:masterPublicKey,
+												tag:chosenTag || defaultTag,
+												genesis: genesis
+											}
 
-										//todo : handle possible exception
+											pushNetworkConfiguration(config, (err, res)=>{
+												if (err) console.log("error:", err); //todo: reprompt
 
-										console.log("CONFIG:", JSON.stringify(res, null, 2));
+												fetchNetworkConfiguration(name, (err, res)=>{
+													if (err) return console.log("error:", err);
+												
+													console.log("CONFIG:", JSON.stringify(res, null, 2));
 
-										createGenesis(res.genesis, (genesis)=>{
-											createConfig(nodeName, ()=>{
+													console.log('Node configuration is complete.');
 
-												console.log('Node configuration is complete.');
+													configureChainBIOS(res.network.boot, ()=>{
+														console.log("Bootstrapping is complete.");
+													});
 
-											});			
-										});			
-
+												});
+											});
+							
+										});				
 									});
-
 								});
 							});
 						});
-		    	});
 
-		    });
+			    });
 
-			}
+				}
+				else {
 
-		});
+			    promptNetworkName("join", (name)=>{
+
+			    	promptNodeName((nodeName)=>{
+							createWallet(()=>{
+								unlockWallet(()=>{
+									createKeys("master",  ()=>{
+
+										fetchNetworkConfiguration((err, res)=>{
+
+											//todo : handle possible exception
+
+											console.log("CONFIG:", JSON.stringify(res, null, 2));
+
+											createGenesis(res.genesis, (genesis)=>{
+												createConfig(nodeName, ()=>{
+
+													console.log('Node configuration is complete.');
+
+												});			
+											});			
+
+										});
+
+									});
+								});
+							});
+			    	});
+
+			    });
+
+				}
+
+			});
+
+		}
 
 	}
 
