@@ -129,36 +129,41 @@ function main(){
 		git(repoPath).checkout(chosenTag, ()=>{
 			console.log('Checkout of ' + chosenTag  + ' successful')
 			console.log('Building EOS ' + chosenTag);
-			process.chdir(repoPath);
-			const eosbuild = spawn('bash',['./eosio_build.sh']);
 
-			eosbuild.stdout.setEncoding('utf8');
-			eosbuild.stdout.on('data', (chunk) => {
-				console.log(chunk)
-			});
+			git(repoPath).submoduleUpdate(["--init", "--recursive"], ()=>{
 
-			eosbuild.on('close', (code) => {
-			  if (code == 0){
-			  	console.log('Build process completed successfully')
-			  	process.chdir(repoPath + '/build')
-				const eosMakeInstall = spawn('sudo',['make', 'install']);
-			  	eosMakeInstall.stdout.setEncoding('utf8');
-				eosMakeInstall.stdout.on('data', (chunk) => {
+				process.chdir(repoPath);
+				const eosbuild = spawn('bash',['./eosio_build.sh']);
+
+				eosbuild.stdout.setEncoding('utf8');
+				eosbuild.stdout.on('data', (chunk) => {
 					console.log(chunk)
 				});
-				eosMakeInstall.on('close', (code2) => {
-					if (code2 == 0){
-			  			console.log('Make install process completed successfully')
-			  			configureEos();
-					}
-			  		else
-			 			console.log("Error running make install, code: " + code2)
-				});
-			  }
-			 else
-			 	console.log("Error running make install, code: " + code)
 
+				eosbuild.on('close', (code) => {
+				  if (code == 0){
+				  	console.log('Build process completed successfully')
+				  	process.chdir(repoPath + '/build')
+					const eosMakeInstall = spawn('sudo',['make', 'install']);
+				  	eosMakeInstall.stdout.setEncoding('utf8');
+					eosMakeInstall.stdout.on('data', (chunk) => {
+						console.log(chunk)
+					});
+					eosMakeInstall.on('close', (code2) => {
+						if (code2 == 0){
+				  			console.log('Make install process completed successfully')
+				  			configureEos();
+						}
+				  		else
+				 			console.log("Error running make install, code: " + code2)
+					});
+				  }
+				 else
+				 	console.log("Error running make install, code: " + code)
+
+				});
 			});
+
 		})
 	}
 
