@@ -595,6 +595,8 @@ function main(){
 			console.log("Starting nodeos...", command);
 			command.arguments.unshift("nodeos");
 
+			command.arguments.push(genesisFile);
+
 			const nodeos = spawn('nohup', command.arguments);
 
 			nodeos.stderr.setEncoding('utf8');
