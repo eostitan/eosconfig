@@ -602,6 +602,9 @@ function main(){
 			command.arguments.push("--genesis-json");
 			command.arguments.push(genesisFile);
 
+			command.arguments.push("--config-dir");
+			command.arguments.push(configPath);
+
 			const nodeos = spawn('nohup', command.arguments);
 
 			nodeos.stderr.setEncoding('utf8');
