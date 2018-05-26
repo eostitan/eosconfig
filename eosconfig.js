@@ -9,8 +9,6 @@ var eos = require("eosjs-ecc");
 var async = require("async");
 var path = require("path");
 var colors = require("colors");
-var mkdirp = require("mkdirp");
-
 
 function main(){
 
@@ -42,8 +40,8 @@ function main(){
 	const nodeosPath = path.join(eosioPath, "nodeos");
 	const dataPath = path.join(nodeosPath, "data");
 	const configPath = path.join(nodeosPath, "config");
-	const configFile = path.join(configPath, "config.ini");
-	const genesisFile = path.join(configPath, "genesis.json");
+	const configFile = path.join(nodeosPath, "config", "config.ini");
+	const genesisFile = path.join(nodeosPath, "config", "genesis.json");
 
 
 	console.log("Creating folders...");
@@ -195,13 +193,16 @@ function main(){
 
 	function launchKeosd(cb){
 		keosd  = exec('keosd', (e, stdout, stderr)=> {
-			cb();
+			return cb && cb();
 		});
 	}
 
 	function killKeosd(cb){
 		if (keosd)
 			keosd.kill();
+
+		return cb && cb();
+		
 	}
 
 	function createWallet(cb){
