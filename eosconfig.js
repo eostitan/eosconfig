@@ -665,7 +665,7 @@ function main(){
 
 			var scriptPath = path.join(eosTitanPath, 'nodeos.sh');
 
-			console.log("launching nodeos script", scriptPath);
+			console.log("launching nodeos script, path:", scriptPath);
 
 			var nodeos = spawn(scriptPath);
 
