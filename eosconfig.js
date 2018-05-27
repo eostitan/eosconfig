@@ -527,7 +527,7 @@ function main(){
 	}
 
 	function createConfig(name, peers, cb){
-		console.log('Creating config.ini');
+		console.log('Creating config.ini', name, peers);
 
 		let configContent = configTemplate;
 
