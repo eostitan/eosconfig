@@ -322,7 +322,7 @@ function main(){
 				console.log(stderr);
 			}
 
-			return cb();
+			return setTimeout(cb, 2000);
 
 		});
 
@@ -643,7 +643,7 @@ function main(){
 			  console.log('error: ' + err);
 			});
 
-			return setTimeout(cb, 5000); //replace by smart stderr handling
+			return setTimeout(cb, 2000); //replace by smart stderr handling
 
 		}
 		else if (command.command=="generate_contract_keys"){
