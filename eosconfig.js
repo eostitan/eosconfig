@@ -708,7 +708,7 @@ function main(){
 				console.log("body", body);
 				console.log("Added as peer to discovery file.");
 
-				return cb && cb(null, body);
+				return cb && cb();
 			}
 			else return cb && cb({error: "Could not add peer to discvoery file."});
 
