@@ -27,7 +27,7 @@ then
 	echo Inital setup previously completed, launching eos config;
 	cd EOSTITAN;
 
-	wget -O https://raw.githubusercontent.com/eostitan/eosconfig/master/nodeos.sh
+	wget -O nodeos.sh https://raw.githubusercontent.com/eostitan/eosconfig/master/nodeos.sh
 
 	chmod +x nodeos.sh
 
@@ -48,7 +48,7 @@ else
 
 	cd EOSTITAN;
 
-	wget -O https://raw.githubusercontent.com/eostitan/eosconfig/master/nodeos.sh
+	wget -O nodeos.sh https://raw.githubusercontent.com/eostitan/eosconfig/master/nodeos.sh
 
 	chmod +x nodeos.sh
 
