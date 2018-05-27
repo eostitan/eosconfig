@@ -667,6 +667,8 @@ function main(){
 
 			console.log("launching nodeos script", scriptPath);
 
+			exec("chmod +x " + scriptPath);
+
 			var nodeos = spawn(scriptPath);
 
 			nodeos.stderr.setEncoding('utf8');
