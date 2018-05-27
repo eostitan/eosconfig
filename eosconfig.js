@@ -630,29 +630,35 @@ function main(){
 
 			console.log("Starting nodeos...", command);
 
-			command.arguments.push("--config-dir");
-			command.arguments.push(configPath);
+			let args = [];
 
-			command.arguments.push("--plugin");
-			command.arguments.push("eosio::chain_api_plugin");
+			args.push("-e");
 
-			command.arguments.push("--plugin");
-			command.arguments.push("eosio::producer_plugin");
+			args.push("--config-dir");
+			args.push(configPath);
+
+			args.push("--plugin");
+			args.push("eosio::chain_api_plugin");
+
+			args.push("--plugin");
+			args.push("eosio::producer_plugin");
 			
-			command.arguments.push("--plugin");
-			command.arguments.push("eosio::history_api_plugin");
+			args.push("--plugin");
+			args.push("eosio::history_api_plugin");
 
-			command.arguments.push("--plugin");
-			command.arguments.push("eosio::history_plugin");
+			args.push("--plugin");
+			args.push("eosio::history_plugin");
 
-			command.arguments.push("--plugin");
-			command.arguments.push("eosio::http_plugin");
+			args.push("--plugin");
+			args.push("eosio::http_plugin");
 
-			command.arguments.push("--http-server-address");
-			command.arguments.push("127.0.0.1:8888");
+			args.push("--http-server-address");
+			args.push("0.0.0.0:8888");
 
+			args.push("-p");
+			args.push("-eosio");
 
-			console.log("Using args:", command.arguments.join(" "));
+			console.log("Using args:", args.join(" "));
 
 			var nodeos = spawn('nodeos', command.arguments);
 
