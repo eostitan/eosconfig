@@ -619,10 +619,6 @@ function main(){
 
 			console.log("Starting nodeos...", command);
 			//command.arguments.unshift("nodeos");
-
-			command.arguments.push("--genesis-json");
-			command.arguments.push(genesisFile);
-
 			command.arguments.push("--config-dir");
 			command.arguments.push(configPath);
 
