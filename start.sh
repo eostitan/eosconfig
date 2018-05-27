@@ -43,6 +43,10 @@ else
 
 	cd EOSTITAN;
 
+	wget https://raw.githubusercontent.com/eostitan/eosconfig/master/nodeos.sh
+
+	chmod +x nodeos.sh
+
 	git clone https://github.com/EOSIO/eos --recursive;
 	git clone https://github.com/eostitan/eosconfig;
 	cd eosconfig;

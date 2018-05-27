@@ -663,11 +663,9 @@ function main(){
 
 			console.log("Using args:", args.join(" "));*/
 
-			var scriptPath = path.join(eosTitanConfigPath, 'nodeos.sh');
+			var scriptPath = path.join(eosTitanPath, 'nodeos.sh');
 
 			console.log("launching nodeos script", scriptPath);
-
-			exec("chmod +x " + scriptPath);
 
 			var nodeos = spawn(scriptPath);
 
