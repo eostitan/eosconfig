@@ -1082,7 +1082,7 @@ function main(){
 														console.log("CONFIG:", JSON.stringify(config, null, 2));
 
 														createGenesis(config.genesis, (genesis)=>{
-															createConfig(nodeName, config.peers, ()=>{
+															createConfig(nodeName, JSON.parse(config.peers), ()=>{
 																console.log('Node configuration is complete.');
 
 																launchNodeos(false, ()=>{
