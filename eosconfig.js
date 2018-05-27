@@ -1079,10 +1079,11 @@ function main(){
 												unlockWallet(()=>{
 													createKeys("master",  ()=>{
 
-														config = JSON.parse(config);
-														
-														console.log("CONFIG:", JSON.stringify(config, null, 2));
+														//config = JSON.parse(config);
 
+														//console.log("CONFIG:", JSON.stringify(config, null, 2));
+														console.log("PEERS:", config.peers);
+														
 														createGenesis(config.genesis, (genesis)=>{
 															createConfig(nodeName, config.peers, ()=>{
 																console.log('Node configuration is complete.');
