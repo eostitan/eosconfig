@@ -222,6 +222,20 @@ function main(){
 
 			nodeos_pre = spawn('nodeos', args);
 
+			if (!setGenesis){
+
+				nodeos_pre.stdout.setEncoding('utf8');
+				nodeos_pre.stdout.on('data', (chunk) => {
+					console.log(chunk)
+				});
+
+				nodeos_pre.stderr.setEncoding('utf8');
+				nodeos_pre.stderr.on('data', (chunk) => {
+					console.log(chunk)
+				});
+				
+			}
+
 			setTimeout(function(){
 
 				return cb && cb();
@@ -447,6 +461,21 @@ function main(){
 
 	}
 
+	function pushAddPeer(peer, cb){
+/*
+		request({url: serverURL + '/addpeer', method: 'POST', json: data}, function(err, res, body){
+			if (err) console.log("ERROR:", err);
+
+			if (body && !body.error){
+				//console.log("");
+				console.log("pushed network configuration");
+				//console.log(JSON.stringify(body, null, 2));
+				return cb && cb(null, body);
+			}
+			else return cb && cb({error: err || body.error});
+		});*/
+
+	}
 
 	function fetchNetworkConfiguration(name, cb){
 
@@ -465,14 +494,19 @@ function main(){
 
 	}
 
-	function createConfig(name, cb){
+	function createConfig(name, peers, cb){
 		console.log('Creating config.ini');
 
 		let configContent = configTemplate;
 
 		configContent += "\nagent-name = " + '"' + name + '"';
-		configContent += "\nproducer-name = " + name ;
-		configContent += '\nprivate-key = ["' + masterPublicKey + '","' + masterPrivateKey + '"]';
+		configContent += "\nproducer-name = " + name ; 
+		configContent += '\nprivate-key = ["' + masterPublicKey + '","' + masterPrivateKey + '"]'; 
+
+		for (let p of peers){
+			configContent += '\np2p-peer-address = ' + p;
+		}
+
 		configContent += "\n";
 
 /*		exec('echo ' + configContent + ' > ~/.local/share/eosio/nodeeos/config/config.ini', ()=>{
@@ -486,6 +520,7 @@ function main(){
 		return cb && cb(configContent);
 
 	}
+
 
 	function promptNetworkInfo(cb){
 		var input = readline.createInterface(process.stdin, process.stdout);
@@ -513,7 +548,7 @@ function main(){
 			console.log("line", line, line.length)
 		    if (line == 0 || line.toLowerCase() == 'y' ||  line.toLowerCase() == 'yes'){
 					input.close();
-		    	return promptDomain();
+		    	return promptDomain(cb);
 		    }
 		    else {
 					input.close();
@@ -932,7 +967,7 @@ function main(){
 											createKeys("master", ()=>{ //todo : check if exists
 												console.log('Keys created');
 												createGenesis(null, (genesis)=>{
-													createConfig("eosio", ()=>{
+													createConfig("eosio", [], ()=>{
 
 														launchNodeos(true, ()=>{
 															killNodeos(()=>{
@@ -943,7 +978,7 @@ function main(){
 																	tag:chosenTag || defaultTag,
 																	genesis: genesis
 																}
-																
+
 																promptAddPeer((peer)=>{
 
 																	pushNetworkConfiguration(config, (err, res)=>{
@@ -1019,7 +1054,7 @@ function main(){
 														console.log("CONFIG:", JSON.stringify(config, null, 2));
 
 														createGenesis(config.genesis, (genesis)=>{
-															createConfig(nodeName, ()=>{
+															createConfig(nodeName, config.peers, ()=>{
 																console.log('Node configuration is complete.');
 
 																launchNodeos(false, ()=>{
