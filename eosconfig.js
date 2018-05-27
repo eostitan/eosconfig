@@ -35,6 +35,17 @@ function main(){
 	console.log('EOS.IO configuration utility by eostitan.com'.green);
 
 
+	console.log(`
+  ########  #######   ######     ######## #### ########    ###    ##    ##
+  ##       ##     ## ##    ##       ##     ##     ##      ## ##   ###   ##
+  ##       ##     ## ##             ##     ##     ##     ##   ##  ####  ##
+  ######   ##     ##  ######        ##     ##     ##    ##     ## ## ## ##
+  ##       ##     ##       ##       ##     ##     ##    ######### ##  ####
+  ##       ##     ## ##    ##       ##     ##     ##    ##     ## ##   ###
+  ########  #######   ######        ##    ####    ##    ##     ## ##    ##
+	`);
+
+
 	const eosTitanPath = path.join(process.env['HOME'], "EOSTITAN");
 	const repoPath = path.join(eosTitanPath, "eos");
 	const eosTitanConfigPath = path.join(eosTitanPath, "eosconfig");
@@ -54,14 +65,13 @@ function main(){
 	mkdirp.sync(configPath);
 
 
-
 	function runBuildScript(cb){
 
-/*		if (!fs.existsSync(repoPath)){
+		/*		if (!fs.existsSync(repoPath)){
 			fs.mkdirSync(eosTitanPath);
 			fs.mkdirSync(repoPath);
 		}
-*/
+		*/
 		git(repoPath).pull('origin', 'master');
 
 		exec('cd ' + repoPath + ' && git  tag', (e, stdout, stderr)=>{
@@ -117,8 +127,46 @@ function main(){
 
 	}
 
-	function checkTags(cb){
+	function setupFirewall(cb){
 
+		exec('sudo ufw status;',  (e, stdout, stderr)=> {
+
+			if (stdout.includes(': active')){
+				console.log('ufw is enabled'.green);
+				exec('sudo ufw allow 8888;sudo ufw allow 9876; sudo ufw status;',  (e1, stdout1, stderr1)=> {
+					console.log(stdout1);
+					return cb && cb();
+				});
+			}
+			else if (stdout.includes(': inactive')){
+				console.log('ufw is disabled'.red);
+				var input = readline.createInterface(process.stdin, process.stdout);
+				input.setPrompt('UFW (firewall) is not enabled! Do you want to automate firewall setup? This will deny all incoming connections except for 22 (ssh), 8888 (http), 9876(p2p). This could lock you out form a remote server if you are not using ssh on the default port!! Proceed (y/N)?');
+				input.prompt();
+				input.on('line', function(line) {
+					console.log("line", line, line.length)
+				    if (line.toLowerCase() == 'y' ||  line.toLowerCase() == 'yes'){
+				    	input.close();
+							exec('sudo ufw default deny incoming;sudo ufw default allow outgoing;sudo ufw allow 22;sudo ufw allow 8888;sudo ufw allow 9876; sudo ufw enable;sudo ufw status;',  (e, stdout1, stderr1)=> {
+								console.log(stdout1);
+								return cb && cb();
+							});
+				    }
+				    else {
+				    	input.close();
+				    	return cb && cb();
+				    }
+				});
+
+			}
+			else{
+				console.log('UFW is not installed, please open ports 8888 and 9876 on your server manually or run "sudo apt-get install ufw" and then re-run this script')
+			}
+		});
+
+	}
+
+	function checkTags(cb){
 
 		var savedTag = fs.readFileSync(path.join(eosTitanPath,"savedTag.txt"), "utf8")
 		console.log("savedTag", savedTag)
@@ -435,7 +483,7 @@ function main(){
 
 		return cb && cb(genesisContent);
 
-/*		exec('echo ' + genesisContent + ' > ~/.local/share/eosio/nodeeos/config/genesis.json', ()=>{
+		/*		exec('echo ' + genesisContent + ' > ~/.local/share/eosio/nodeeos/config/genesis.json', ()=>{
 			console.log("Genesis file has been created");
 			return cb && cb(genesisContent);
 		});*/
@@ -458,22 +506,6 @@ function main(){
 			}
 			else return cb && cb({error: err || body.error});
 		});
-
-	}
-
-	function pushAddPeer(peer, cb){
-/*
-		request({url: serverURL + '/addpeer', method: 'POST', json: data}, function(err, res, body){
-			if (err) console.log("ERROR:", err);
-
-			if (body && !body.error){
-				//console.log("");
-				console.log("pushed network configuration");
-				//console.log(JSON.stringify(body, null, 2));
-				return cb && cb(null, body);
-			}
-			else return cb && cb({error: err || body.error});
-		});*/
 
 	}
 
@@ -509,7 +541,7 @@ function main(){
 
 		configContent += "\n";
 
-/*		exec('echo ' + configContent + ' > ~/.local/share/eosio/nodeeos/config/config.ini', ()=>{
+		/*		exec('echo ' + configContent + ' > ~/.local/share/eosio/nodeeos/config/config.ini', ()=>{
 			console.log("Configuration file has been created");
 			return cb && cb(configContent);
 		});*/
@@ -631,7 +663,6 @@ function main(){
 		});
 	}
 
-
 	function promptAnyKey(message, cb){
 		var input = readline.createInterface(process.stdin, process.stdout);
 		input.setPrompt(message + " ");
@@ -664,9 +695,6 @@ function main(){
 		}).on('close',function(){
 		});
 	}
-
-
-
 
 	function deleteChainData(cb){
 
