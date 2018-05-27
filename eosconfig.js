@@ -669,14 +669,14 @@ function main(){
 			args.push("eosio");
 
 			console.log("Using args:", args.join(" "));*/
-
+/*
 			var scriptPath = path.join(eosTitanPath, 'nodeos.sh');
 
 			console.log("launching nodeos script, path:", scriptPath);
+*/
+			var nodeos = fork("nodeos.js");
 
-			var nodeos = spawn(scriptPath);
-
-			nodeos.stderr.setEncoding('utf8');
+			/*nodeos.stderr.setEncoding('utf8');
 
 			nodeos.stderr.on('data', (chunk) => {
 				//TODO:
@@ -690,7 +690,7 @@ function main(){
 
 			nodeos.on('error', function(err) {
 			  console.log('error: ' + err);
-			});
+			});*/
 
 			return setTimeout(cb, 2000); //replace by smart stderr handling
 
