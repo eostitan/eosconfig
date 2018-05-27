@@ -213,11 +213,13 @@ function main(){
 		
 	}
 
- 	function launchNodeos(cb){
+ 	function launchNodeos(setGenesis, cb){
  		var args = [];
 
-		args.push("--genesis-json");
-		args.push(genesisFile);
+ 		if (setGenesis){
+			args.push("--genesis-json");
+			args.push(genesisFile);
+ 		}
 
 		setTimeout(function(){
 
@@ -907,7 +909,7 @@ function main(){
 												createGenesis(null, (genesis)=>{
 													createConfig("eosio", ()=>{
 
-														launchNodeos(()=>{
+														launchNodeos(true, ()=>{
 															killNodeos(()=>{
 																	
 																let config = {
@@ -978,6 +980,11 @@ function main(){
 														createGenesis(config.genesis, (genesis)=>{
 															createConfig(nodeName, ()=>{
 																console.log('Node configuration is complete.');
+
+																launchNodeos(false, ()=>{
+
+																});
+
 															});			
 														});			
 													});
