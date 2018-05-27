@@ -744,7 +744,7 @@ function main(){
 
 			//cleos push action eosio.token issue '[ "eosio", "1000000000.0000 SYS", "memo" ]' -p eosio
 
-			let args = '"' + command.params.join('","') + '"';
+			let args =  "'" + '["' + command.params.join('","') + '"]' + "'";
 
       console.log('cleos push action ' + command.contract + " " + command.action + " " + args + " -p " + command.signature );
 
