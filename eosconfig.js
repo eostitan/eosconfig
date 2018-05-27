@@ -90,7 +90,7 @@ function main(){
 				input.on('line', function(line) {
 				    if (availableTags[line]) {
 				    	chosenTag = availableTags[line].trim();
-				    	fs.writeFile(eosTitanPath + "savedTag.txt", chosenTag, err=> {
+				    	fs.writeFile(path.join(eosTitanPath,"savedTag.txt"), chosenTag, err=> {
 						    if(err)
 						        return console.log(err);
 						    
