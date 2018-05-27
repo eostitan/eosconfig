@@ -648,6 +648,10 @@ function main(){
 			command.arguments.push("--plugin");
 			command.arguments.push("eosio::http_plugin");
 
+			command.arguments.push("--http-server-address");
+			command.arguments.push("127.0.0.1:8888");
+
+
 			console.log("Using args:", command.arguments.join(" "));
 
 			var nodeos = spawn('nodeos', command.arguments);
