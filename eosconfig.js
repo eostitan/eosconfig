@@ -31,7 +31,7 @@ function main(){
 	var defaultTag = "dawn-v4.2.0";
 
 	var walletKey;
-	
+
 	console.log('EOS.IO configuration utility by eostitan.com'.green);
 
 
@@ -48,7 +48,7 @@ function main(){
 
 
 	console.log("Creating folders...");
-	
+
 	mkdirp.sync(eosioPath);
 	mkdirp.sync(nodeosPath);
 	mkdirp.sync(configPath);
@@ -90,12 +90,8 @@ function main(){
 				input.on('line', function(line) {
 				    if (availableTags[line]) {
 				    	chosenTag = availableTags[line].trim();
-				    	fs.writeFile(eosTitanPath + "savedTag.txt", chosenTag, err=> {
-						    if(err)
-						        return console.log(err);
-						    
-						    input.close();
-						}); 
+							fs.writeFileSync(path.join(eosTitanPath,"savedTag.txt"), chosenTag);
+						  input.close();
 				    }
 				    else{
 				    	console.log('Please enter a number from 0 to ' + (availableTags.length - 1))
@@ -119,40 +115,37 @@ function main(){
 			}
 		});
 
-	}	
+	}
 
 	function checkTags(cb){
 
 
-		fs.readFile(eosTitanPath + "savedTag.txt", function read(err, savedTag) {
-		    if (err) 
-		        buildEos(cb); 
+		var savedTag = fs.readFileSync(path.join(eosTitanPath,"savedTag.txt"), "utf8")
+		console.log("savedTag", savedTag)
+		if (!savedTag)
+	        buildEos(cb);
 
-			else if (chosenTag == savedTag){
-				var input2 = readline.createInterface(process.stdin, process.stdout);
-				input2.setPrompt(chosenTag + ' has been checked out previously, do you want to re-run the eosio_build (y/N)?');
-				input2.prompt();
-				input2.on('line', function(line) {
-					console.log("line", line, line.length)
-				    if (line.toLowerCase() == 'y' ||  line.toLowerCase() == 'yes'){
-				    	input2.close();
-				    	buildEos(cb);
-				    }
-				    else {
-				    	input2.close();
-				    	return cb && cb();
-				    }
-				}).on('close',function(){
-				});
+		else if (chosenTag == savedTag){
+			var input2 = readline.createInterface(process.stdin, process.stdout);
+			input2.setPrompt(chosenTag + ' has been checked out previously, do you want to re-run the eosio_build (y/N)?');
+			input2.prompt();
+			input2.on('line', function(line) {
+				console.log("line", line, line.length)
+			    if (line.toLowerCase() == 'y' ||  line.toLowerCase() == 'yes'){
+			    	input2.close();
+			    	buildEos(cb);
+			    }
+			    else {
+			    	input2.close();
+			    	return cb && cb();
+			    }
+			}).on('close',function(){
+			});
 
-			}
-			else{
-				buildEos(cb);
-			}
-		    
-		});
-
-
+		}
+		else{
+			buildEos(cb);
+		}
 	}
 
 	function buildEos(cb){
@@ -177,7 +170,7 @@ function main(){
 					  process.chdir(repoPath + '/build')
 						const eosMakeInstall = spawn('sudo',['make', 'install']);
 					  eosMakeInstall.stdout.setEncoding('utf8');
-						
+
 						eosMakeInstall.stdout.on('data', (chunk) => {
 							console.log(chunk)
 						});
@@ -209,11 +202,12 @@ function main(){
 	}
 
 	function killKeosd(cb){
+		console.log(keosd.pid)
 		if (keosd)
-			keosd.kill();
+			process.kill(keosd.pid, 'SIGINT');
 
 		return cb && cb();
-		
+
 	}
 
  	function launchNodeos(cb){
@@ -248,7 +242,7 @@ function main(){
 			return cb && cb();
 
 		}, 1000);
-		
+
 	}
 
 	function createWallet(cb){
@@ -265,24 +259,21 @@ function main(){
 			if (stderr){
 				if (stderr.includes('Wallet already exists')){
 					console.log('Wallet exists, checking for saved key...');
+					var defaultWalletKey = fs.readFileSync(path.join(eosTitanPath, "defaultWallet.key"), "utf8");
 
-					exec('cat ~/'  + eosTitanPath + '/defaultWallet.key', (e, stdout, stderr)=>{
-						if (stderr){
-							//TODO prompt user to enter password
-							console.log('cant find wallet password')
+					if (!defaultWalletKey){
+						console.log('cant find wallet password')
 
-							promptPassword((password)=>{
-								walletKey = password;
-								cb();
-							});
-
-						}
-						else if (stdout){
-							walletKey = stdout;
+						promptPassword((password)=>{
+							walletKey = password;
 							cb();
-						}
+						});
 
-					});
+					}
+					else{
+						walletKey = defaultWalletKey;
+						cb();
+					}
 				}
 				else console.log(stderr)
 			}
@@ -335,7 +326,7 @@ function main(){
 				exec('cleos wallet import ' + privKey, (e, stdout, stderr)=> {
 
 					console.log("Key imported.");
-					
+
 					keyRing[keyName] = {
 						private: privKey,
 						public: pubKey
@@ -467,7 +458,7 @@ function main(){
 				return cb && cb(null, body);
 			}
 			else return cb && cb({error: "Network not found."});
-			
+
 		});
 
 	}
@@ -478,8 +469,8 @@ function main(){
 		let configContent = configTemplate;
 
 		configContent += "\nagent-name = " + '"' + name + '"';
-		configContent += "\nproducer-name = " + name ; 
-		configContent += '\nprivate-key = ["' + masterPublicKey + '","' + masterPrivateKey + '"]'; 
+		configContent += "\nproducer-name = " + name ;
+		configContent += '\nprivate-key = ["' + masterPublicKey + '","' + masterPrivateKey + '"]';
 		configContent += "\n";
 
 /*		exec('echo ' + configContent + ' > ~/.local/share/eosio/nodeeos/config/config.ini', ()=>{
@@ -601,7 +592,7 @@ function main(){
 
 
 	function deleteChainData(cb){
-	
+
 		exec('rm -r ' + dataPath, (e, stdout, stderr)=> {
 
 			return cb();
@@ -648,7 +639,7 @@ function main(){
 
 			args.push("--plugin");
 			args.push("eosio::producer_plugin");
-			
+
 			args.push("--plugin");
 			args.push("eosio::history_api_plugin");
 
@@ -669,7 +660,7 @@ function main(){
 /*
 			console.log("Starting nodeos...", command);
 
-			
+
 			console.log("Using args:", args.join(" "));*/
 /*
 			var scriptPath = path.join(eosTitanPath, 'nodeos.sh');
@@ -715,7 +706,7 @@ function main(){
 		else if (command.command=="generate_contract_keys"){
 
 			console.log("Generating contracts keys and accounts...");
-			
+
 			command.keys = command.keys.map(function(k){k.creator = command.account;return k});
 
 			async.eachSeries(command.keys, prepareContract, function(err,res){
@@ -829,7 +820,7 @@ function main(){
 
 			});
 */
-		}	
+		}
 
 	}
 
@@ -877,20 +868,20 @@ function main(){
 			    promptNetworkName("create", (name)=>{
 						//if user wants to create a new network
 						if (build){
-							
+
 							runBuildScript(()=>{
 								completeEOSIOConfiguration();
 							});
-							
+
 						}
 						else completeEOSIOConfiguration();
 
 						function completeEOSIOConfiguration(){
 							console.log('Completing EOSIO config')
 							//todo : check if wallet already exists, if it does, reuse the master key instead of creating a new one
-							//launchKeosd(()=>{
+							// launchKeosd(()=>{
 							//	console.log('Launched keosd');
-							//	killKeosd(()=>{
+								// killKeosd(()=>{
 							//		console.log('Killed keosd');
 									createWallet(()=>{
 										console.log('Wallet created');
@@ -903,7 +894,7 @@ function main(){
 
 														launchNodeos(()=>{
 															killNodeos(()=>{
-																	
+
 																let config = {
 																	network_name:name,
 																	initial_key:masterPublicKey,
@@ -916,7 +907,7 @@ function main(){
 
 																	fetchNetworkConfiguration(name, (err, res)=>{
 																		if (err) return console.log("error:", err);
-																	
+
 																		console.log("CONFIG:", JSON.stringify(res, null, 2));
 
 																		console.log('Node configuration is complete.');
@@ -931,14 +922,14 @@ function main(){
 															})
 														})
 
-										
-													});				
+
+													});
 												});
 											});
 										});
 									});
-								//});
-							//});
+								// });
+							// });
 						}
 
 			    });
@@ -952,11 +943,11 @@ function main(){
 							fetchNetworkConfiguration(name, (err, config)=>{
 
 								if (build){
-									
+
 									runBuildScript(()=>{
 										completeNodeConfiguration();
 									});
-									
+
 								}
 								else completeNodeConfiguration();
 
@@ -972,8 +963,8 @@ function main(){
 														createGenesis(config.genesis, (genesis)=>{
 															createConfig(nodeName, ()=>{
 																console.log('Node configuration is complete.');
-															});			
-														});			
+															});
+														});
 													});
 												});
 											});
