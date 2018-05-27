@@ -634,7 +634,6 @@ function main(){
 
 			args.push("nodeos");
 
-
 			args.push("-e");
 
 			args.push("--config-dir");
@@ -663,7 +662,7 @@ function main(){
 
 			console.log("Using args:", args.join(" "));
 
-			var nodeos = spawn('nohup', command.arguments);
+			var nodeos = spawn('nohup', args);
 
 			nodeos.stderr.setEncoding('utf8');
 
