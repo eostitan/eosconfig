@@ -658,7 +658,7 @@ function main(){
 			args.push("0.0.0.0:8888");
 
 			args.push("-p");
-			args.push("-eosio");
+			args.push("eosio");
 
 			console.log("Using args:", args.join(" "));
 
