@@ -757,6 +757,12 @@ function main(){
 			args.push("--http-server-address");
 			args.push("0.0.0.0:8888");
 
+			args.push("--p2p-listen-endpoint");
+			args.push("0.0.0.0:9876");
+
+			args.push("--p2p-server-address");
+			args.push("0.0.0.0:9876");
+
 			args.push("-p");
 			args.push("eosio");
 
