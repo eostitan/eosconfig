@@ -1,5 +1,6 @@
 const { exec } = require('child_process');
 const { spawn } = require('child_process');
+const { fork } = require('child_process');
 var readline = require('readline');
 const git = require('simple-git');
 var fs = require('fs');
