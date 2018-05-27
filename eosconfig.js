@@ -210,6 +210,24 @@ function main(){
 		
 	}
 
+ 	launchNodeos(cb){
+		nodeos  = exec('nodeos -e -p eosio --genesis-json /home/g/.local/share/eosio/nodeos/config/genesis.json --config-dir /home/g/.local/share/eosio/nodeos/config --plugin eosio::chain_api_plugin --plugin eosio::producer_plugin --plugin eosio::history_api_plugin --plugin eosio::history_plugin --plugin eosio::http_plugin');
+
+		setTimeout(function(){
+
+			return cb && cb();
+
+		}, 1000);
+	}
+
+	function killNodeos(cb){
+		if (nodeos)
+			nodeos.kill();
+
+		return cb && cb();
+		
+	}
+
 	function createWallet(cb){
 		console.log('Configuring server for a new chain')
 		console.log('Creating new wallet')
@@ -775,30 +793,37 @@ function main(){
 												console.log('Keys created');
 												createGenesis(null, (genesis)=>{
 													createConfig("eosio", ()=>{
+														
+														lauchNodeos(()=>{
+															killNodeos(()=>{
+																	
+																let config = {
+																	network_name:name,
+																	initial_key:masterPublicKey,
+																	tag:chosenTag || defaultTag,
+																	genesis: genesis
+																}
 
-														let config = {
-															network_name:name,
-															initial_key:masterPublicKey,
-															tag:chosenTag || defaultTag,
-															genesis: genesis
-														}
+																pushNetworkConfiguration(config, (err, res)=>{
+																	if (err) console.log("error:", err); //todo: reprompt
 
-														pushNetworkConfiguration(config, (err, res)=>{
-															if (err) console.log("error:", err); //todo: reprompt
+																	fetchNetworkConfiguration(name, (err, res)=>{
+																		if (err) return console.log("error:", err);
+																	
+																		console.log("CONFIG:", JSON.stringify(res, null, 2));
 
-															fetchNetworkConfiguration(name, (err, res)=>{
-																if (err) return console.log("error:", err);
-															
-																console.log("CONFIG:", JSON.stringify(res, null, 2));
+																		console.log('Node configuration is complete.');
 
-																console.log('Node configuration is complete.');
+																		configureChainBIOS(res.network.boot, ()=>{
+																			console.log("Blockchain bootstrapping is complete.");
+																		});
 
-																configureChainBIOS(res.network.boot, ()=>{
-																	console.log("Blockchain bootstrapping is complete.");
+																	});
 																});
 
-															});
-														});
+															})
+														})
+
 										
 													});				
 												});
