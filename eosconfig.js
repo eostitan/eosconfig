@@ -734,7 +734,34 @@ function main(){
 
       console.log('cleos set contract ' + command.name + " " + filepath);
 
-			exec('cleos set contract ' + command.name + " " + filepath, (e, stdout, stderr)=> {
+      let args = [];
+
+      args.push("set");
+      args.push("contract");
+      args.push(command.name);
+      args.push(filepath);
+
+			var p = spawn("cleos", args);
+
+			p.stdout.setEncoding('utf8');
+			p.stdout.on('data', (chunk) => {
+				console.log(chunk)
+			});
+
+			p.stderr.setEncoding('utf8');
+			p.stderr.on('data', (chunk) => {
+				console.log(chunk)
+			});
+
+			p.on('close', (code) => {
+
+				console.log("set_contract close CODE:", code);
+
+				return cb();
+
+			});
+
+/*			exec('cleos set contract ' + command.name + " " + filepath, (e, stdout, stderr)=> {
 
 				if (stdout){
 					console.log(stdout);
@@ -745,7 +772,7 @@ function main(){
 
 				return cb();
 
-			});
+			});*/
 
 
 		}
@@ -759,6 +786,38 @@ function main(){
 
       console.log('cleos push action ' + command.contract + " " + command.action + " " + args + " -p " + command.signature );
 
+
+      let args = [];
+
+      args.push("push");
+      args.push("action");
+      args.push(command.contract);
+      args.push(command.action);
+      args.push(args);
+      args.push("-p");
+      args.push(command.signature);
+
+			var p = spawn("cleos", args);
+
+			p.stdout.setEncoding('utf8');
+			p.stdout.on('data', (chunk) => {
+				console.log(chunk)
+			});
+
+			p.stderr.setEncoding('utf8');
+			p.stderr.on('data', (chunk) => {
+				console.log(chunk)
+			});
+
+			p.on('close', (code) => {
+
+				console.log("push_action close CODE:", code);
+
+				return cb();
+
+			});
+
+/*
 			exec('cleos push action ' + command.contract + " " + command.action + " " + args + " -p " + command.signature , (e, stdout, stderr)=> {
 
 				if (stdout){
@@ -771,7 +830,7 @@ function main(){
 				return cb();
 
 			});
-
+*/
 		}	
 
 	}
