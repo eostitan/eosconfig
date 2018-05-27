@@ -620,6 +620,8 @@ function main(){
 			command.arguments.push("--plugin");
 			command.arguments.push("eosio::http_plugin");
 
+			console.log("Using args:", command.arguments.join(" "));
+			
 			const nodeos = spawn('nodeos', command.arguments);
 
 			nodeos.stderr.setEncoding('utf8');
