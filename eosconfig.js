@@ -608,16 +608,16 @@ function main(){
 			command.arguments.push("--plugin");
 			command.arguments.push("eosio::chain_api_plugin");
 
-			command.arguments.push("--plugin ");
+			command.arguments.push("--plugin");
 			command.arguments.push("eosio::producer_plugin");
 			
-			command.arguments.push("--plugin ");
+			command.arguments.push("--plugin");
 			command.arguments.push("eosio::history_api_plugin");
 
-			command.arguments.push("--plugin ");
+			command.arguments.push("--plugin");
 			command.arguments.push("eosio::history_plugin");
-			
-			command.arguments.push("--plugin ");
+
+			command.arguments.push("--plugin");
 			command.arguments.push("eosio::http_plugin");
 
 			const nodeos = spawn('nodeos', command.arguments);
