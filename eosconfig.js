@@ -125,6 +125,8 @@ function main(){
 	}	
 
 	function checkTags(cb){
+		console.log('chosenTag: ' + chosenTag);
+		console.log('currentTag: ' + currentTag);
 		if (chosenTag == currentTag){
 			var input2 = readline.createInterface(process.stdin, process.stdout);
 			input2.setPrompt(chosenTag + ' has been checked out previously, do you want to re-run the eosio_build (y/N)?');
@@ -135,13 +137,9 @@ function main(){
 			    	input2.close();
 			    	buildEos(cb);
 			    }
-			    else if  (line == 0 || line.toLowerCase() == 'n' ||  line.toLowerCase() == 'no'){
+			    else {
 			    	input2.close();
 			    	return cb && cb();
-			    }
-			    else {
-			    	console.log('Please enter y or n')
-			    	input2.prompt();
 			    }
 			}).on('close',function(){
 			});
@@ -498,17 +496,12 @@ function main(){
 		input.on('line', function(line) {
 			console.log("line", line, line.length)
 		    if (line.toLowerCase() == 'y' ||  line.toLowerCase() == 'yes'){
-
-				  input.close();
+				input.close();
 		    	return cb(true);
 		    }
-		    else if  (line == 0 || line.toLowerCase() == 'n' ||  line.toLowerCase() == 'no'){
-				  input.close();
-		    	return cb(false);
-		    }
 		    else {
-		    	console.log('Please enter y or n')
-		    	input.prompt();
+				input.close();
+		    	return cb(false);
 		    }
 		}).on('close',function(){
 		});
@@ -520,17 +513,13 @@ function main(){
 		input.prompt();
 		input.on('line', function(line) {
 			console.log("line", line, line.length)
-		    if (line == 0 || line.toLowerCase() == 'y' ||  line.toLowerCase() == 'yes'){
-				  input.close();
-				  return deleteChainData(cb);
-		    }
-		    else if  (line.toLowerCase() == 'n' ||  line.toLowerCase() == 'no'){
-				  input.close();
+		    if  (line.toLowerCase() == 'n' ||  line.toLowerCase() == 'no'){
+				input.close();
 		    	return cb();
 		    }
 		    else {
-		    	console.log('Please enter y or n')
-		    	input.prompt();
+				input.close();
+				return deleteChainData(cb);
 		    }
 		}).on('close',function(){
 		});
