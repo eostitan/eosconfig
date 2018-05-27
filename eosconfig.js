@@ -23,6 +23,7 @@ function main(){
 	var masterPrivateKey;
 	var masterPublicKey;
 	var keosd;
+	var nodeos_pre;
 
 	var keyRing = {};
 
@@ -211,33 +212,24 @@ function main(){
 	}
 
  	function launchNodeos(cb){
-		exec('nodeos --genesis-json ' + genesisFile, (e, stdout, stderr)=> {
+ 		var args = [];
 
-			nodeos = e;
-			
-			//console.log("RES");
+		args.push("--genesis-json");
+		args.push(genesisFile);
 
-			if (stdout){
-				console.log(stdout);
-			}
-			else if (stderr){
-				console.log(stderr);
-			}
+		nodeos_pre = spawn('nodeos', args);
 
-			setTimeout(function(){
+		setTimeout(function(){
 
-				return cb && cb();
+			return cb && cb();
 
-			}, 1000);
-
-		});
-
+		}, 1000);
 
 	}
 
 	function killNodeos(cb){
-		//if (nodeos)
-		//	nodeos.kill();
+		if (nodeos_pre)
+			nodeos_pre.kill();
 
 		setTimeout(function(){
 
@@ -637,7 +629,7 @@ function main(){
 		if (command.command=="nodeos"){
 
 			console.log("Starting nodeos...", command);
-			//command.arguments.unshift("nodeos");
+
 			command.arguments.push("--config-dir");
 			command.arguments.push(configPath);
 
@@ -658,7 +650,7 @@ function main(){
 
 			console.log("Using args:", command.arguments.join(" "));
 
-			const nodeos = spawn('nodeos', command.arguments);
+			var nodeos = spawn('nodeos', command.arguments);
 
 			nodeos.stderr.setEncoding('utf8');
 
