@@ -20,7 +20,6 @@ function main(){
 
 	var availableTags = [];
 	var chosenTag;
-	var currentTag;
 	var masterPrivateKey;
 	var masterPublicKey;
 	var keosd;
@@ -54,6 +53,8 @@ function main(){
 	mkdirp.sync(nodeosPath);
 	mkdirp.sync(configPath);
 
+
+
 	function runBuildScript(cb){
 
 /*		if (!fs.existsSync(repoPath)){
@@ -62,14 +63,6 @@ function main(){
 		}
 */
 		git(repoPath).pull('origin', 'master');
-
-		//check current tag
-		git(repoPath).raw(['describe', '--tags'], (err, res) => {
-			currentTag = res.trim();
-			console.log("Current tag is :", currentTag);
-		});
-
-		//console.log(repoPath)
 
 		exec('cd ' + repoPath + ' && git  tag', (e, stdout, stderr)=>{
 			console.log('d')
@@ -97,7 +90,12 @@ function main(){
 				input.on('line', function(line) {
 				    if (availableTags[line]) {
 				    	chosenTag = availableTags[line].trim();
-				    	input.close();
+				    	fs.writeFile(eosTitanPath + "savedTag.txt", chosenTag, err=> {
+						    if(err)
+						        return console.log(err);
+						    
+						    input.close();
+						}); 
 				    }
 				    else{
 				    	console.log('Please enter a number from 0 to ' + (availableTags.length - 1))
@@ -121,33 +119,40 @@ function main(){
 			}
 		});
 
-
 	}	
 
 	function checkTags(cb){
-		console.log('chosenTag: ' + chosenTag);
-		console.log('currentTag: ' + currentTag);
-		if (chosenTag == currentTag){
-			var input2 = readline.createInterface(process.stdin, process.stdout);
-			input2.setPrompt(chosenTag + ' has been checked out previously, do you want to re-run the eosio_build (y/N)?');
-			input2.prompt();
-			input2.on('line', function(line) {
-				console.log("line", line, line.length)
-			    if (line.toLowerCase() == 'y' ||  line.toLowerCase() == 'yes'){
-			    	input2.close();
-			    	buildEos(cb);
-			    }
-			    else {
-			    	input2.close();
-			    	return cb && cb();
-			    }
-			}).on('close',function(){
-			});
 
-		}
-		else{
-			buildEos(cb);
-		}
+
+		fs.readFile(eosTitanPath + "savedTag.txt", function read(err, savedTag) {
+		    if (err) 
+		        buildEos(cb); 
+
+			else if (chosenTag == savedTag){
+				var input2 = readline.createInterface(process.stdin, process.stdout);
+				input2.setPrompt(chosenTag + ' has been checked out previously, do you want to re-run the eosio_build (y/N)?');
+				input2.prompt();
+				input2.on('line', function(line) {
+					console.log("line", line, line.length)
+				    if (line.toLowerCase() == 'y' ||  line.toLowerCase() == 'yes'){
+				    	input2.close();
+				    	buildEos(cb);
+				    }
+				    else {
+				    	input2.close();
+				    	return cb && cb();
+				    }
+				}).on('close',function(){
+				});
+
+			}
+			else{
+				buildEos(cb);
+			}
+		    
+		});
+
+
 	}
 
 	function buildEos(cb){
