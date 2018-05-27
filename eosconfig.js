@@ -675,7 +675,7 @@ function main(){
 
 			console.log("launching nodeos script, path:", scriptPath);
 */
-			var nodeos = fork("nodeos.js");
+			var nodeos = fork(path.join(eosTitanConfigPath,"nodeos.js"));
 
 			/*nodeos.stderr.setEncoding('utf8');
 
