@@ -696,6 +696,26 @@ function main(){
 		});
 	}
 
+	function addPeerToNetwork(addPeerData, cb){
+
+		var signature = eos.sign(cjson.stringify(addPeerData), masterPrivateKey);
+
+		addPeerData.signature = signature;
+
+		request({url: serverURL + '/addpeer', method: 'POST', json:addPeerData}, function(err, res, body){
+		
+			if (body){
+				console.log("Added as peer to discovery file.");
+
+				return cb && cb(null, body);
+			}
+			else return cb && cb({error: "Could not add peer to discvoery file."});
+
+		});
+
+
+	}
+
 	function deleteChainData(cb){
 
 		exec('rm -r ' + dataPath, (e, stdout, stderr)=> {
@@ -1020,7 +1040,9 @@ function main(){
 
 																		if (peer!=false){
 																			
-																			complete();
+																			addPeerToNetwork({network_name:name, peer:peer}, ()=>{
+																				complete();
+																			});
 
 																		}
 																		else complete()
