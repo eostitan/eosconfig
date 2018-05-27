@@ -890,9 +890,9 @@ function main(){
 						function completeEOSIOConfiguration(){
 							console.log('Completing EOSIO config')
 							//todo : check if wallet already exists, if it does, reuse the master key instead of creating a new one
-							//launchKeosd(()=>{
+							launchKeosd(()=>{
 							//	console.log('Launched keosd');
-							//	killKeosd(()=>{
+								killKeosd(()=>{
 							//		console.log('Killed keosd');
 									createWallet(()=>{
 										console.log('Wallet created');
@@ -939,8 +939,8 @@ function main(){
 											});
 										});
 									});
-								//});
-							//});
+								});
+							});
 						}
 
 			    });
