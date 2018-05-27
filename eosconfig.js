@@ -675,7 +675,16 @@ function main(){
 
 			console.log("launching nodeos script, path:", scriptPath);
 */
-			var nodeos = execFile(path.join(eosTitanPath,"nodeos.sh"));
+			var nodeos = execFile(path.join(eosTitanPath,"nodeos.sh"), (error, stdout, stderr) => {
+			  
+			  if (error) {
+			    console.log("error", error);
+			  }
+
+			  console.log("stdout", stdout);
+			  console.log("stderr", stderr);
+
+			});
 
 			/*nodeos.stderr.setEncoding('utf8');
 
