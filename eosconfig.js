@@ -310,6 +310,9 @@ function main(){
 	}
 
 	function createAccount(name, creator, key, cb){
+
+		console.log('cleos create account ' + creator + " " + name + " " + key + " " + key);
+
 		exec('cleos create account ' + creator + " " + name + " " + key + " " + key, (e, stdout, stderr)=> {
 
 			if (stdout){
@@ -621,7 +624,7 @@ function main(){
 			command.arguments.push("eosio::http_plugin");
 
 			console.log("Using args:", command.arguments.join(" "));
-			
+
 			const nodeos = spawn('nodeos', command.arguments);
 
 			nodeos.stderr.setEncoding('utf8');
@@ -661,6 +664,8 @@ function main(){
 
       let filepath = path.join(repoPath, "build", "contracts", command.path);
 
+      console.log('cleos set contract ' + command.name + " " + filepath);
+
 			exec('cleos set contract ' + command.name + " " + filepath, (e, stdout, stderr)=> {
 
 				if (stdout){
@@ -683,6 +688,8 @@ function main(){
 			//cleos push action eosio.token issue '[ "eosio", "1000000000.0000 SYS", "memo" ]' -p eosio
 
 			let args = '"' + command.params.join('","') + '"';
+
+      console.log('cleos push action ' + command.contract + " " + command.action + " " + args + " -p " + command.signature );
 
 			exec('cleos push action ' + command.contract + " " + command.action + " " + args + " -p " + command.signature , (e, stdout, stderr)=> {
 
