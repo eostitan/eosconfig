@@ -37,6 +37,7 @@ function main(){
 
 	const eosTitanPath = path.join(process.env['HOME'], "EOSTITAN");
 	const repoPath = path.join(eosTitanPath, "eos");
+	const eosTitanConfigPath = path.join(eosTitanPath, "eosconfig");
 
 	const eosioPath = path.join(process.env['HOME'], ".local", "share", "eosio");
 	const nodeosPath = path.join(eosioPath, "nodeos");
@@ -662,7 +663,7 @@ function main(){
 
 			console.log("Using args:", args.join(" "));*/
 
-			var nodeos = spawn('./nodeos.sh');
+			var nodeos = spawn(path.join(eosTitanConfigPath, 'nodeos.sh'));
 
 			nodeos.stderr.setEncoding('utf8');
 
