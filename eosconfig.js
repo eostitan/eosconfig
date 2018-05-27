@@ -218,13 +218,18 @@ function main(){
 		args.push("--genesis-json");
 		args.push(genesisFile);
 
-		nodeos_pre = spawn('nodeos', args);
-
 		setTimeout(function(){
 
-			return cb && cb();
+			nodeos_pre = spawn('nodeos', args);
 
-		}, 1000);
+			setTimeout(function(){
+
+				return cb && cb();
+
+			}, 2000);
+
+
+		}, 2000);
 
 	}
 
@@ -241,8 +246,8 @@ function main(){
 	}
 
 	function createWallet(cb){
-		console.log('Configuring server for a new chain')
-		console.log('Creating new wallet')
+		//console.log('Configuring server for a new chain')
+		console.log('Setting up wallet')
 		exec('cleos wallet create', (e, stdout, stderr)=> {
 			if (stdout){
 				walletKey = stdout.split('"');
@@ -813,7 +818,7 @@ function main(){
 										console.log('Wallet created');
 										unlockWallet(()=>{
 											console.log('Wallet unlocked');
-											createKeys("master", ()=>{
+											createKeys("master", ()=>{ //todo : check if exists
 												console.log('Keys created');
 												createGenesis(null, (genesis)=>{
 													createConfig("eosio", ()=>{
