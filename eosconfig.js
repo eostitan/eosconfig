@@ -270,7 +270,7 @@ function main(){
 
 			nodeos_pre = spawn('nodeos', args);
 
-			if (!setGenesis){
+			//if (!setGenesis){
 
 				nodeos_pre.stdout.setEncoding('utf8');
 				nodeos_pre.stdout.on('data', (chunk) => {
@@ -282,7 +282,7 @@ function main(){
 					console.log(chunk)
 				});
 				
-			}
+			//}
 
 			setTimeout(function(){
 
@@ -1095,7 +1095,7 @@ function main(){
 															createConfig(nodeName, config.network.peers, ()=>{
 																console.log('Node configuration is complete.');
 
-																launchNodeos(false, ()=>{
+																launchNodeos(true, ()=>{
 
 																});
 
