@@ -10,7 +10,7 @@ function program_is_installed {
 
 cd ~;
 
-# if (program_is_installed node -eq 1) 
+# if (program_is_installed node -eq 1)
 # 	then echo nodejs is already installed
 # fi
 
@@ -59,5 +59,3 @@ else
 	node eosconfig.js;
 
 fi
-
-
