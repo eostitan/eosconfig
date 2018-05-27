@@ -210,7 +210,7 @@ function main(){
 		
 	}
 
- 	launchNodeos(cb){
+ 	function launchNodeos(cb){
 		nodeos  = exec('nodeos -e -p eosio --genesis-json /home/g/.local/share/eosio/nodeos/config/genesis.json --config-dir /home/g/.local/share/eosio/nodeos/config --plugin eosio::chain_api_plugin --plugin eosio::producer_plugin --plugin eosio::history_api_plugin --plugin eosio::history_plugin --plugin eosio::http_plugin');
 
 		setTimeout(function(){
@@ -793,7 +793,7 @@ function main(){
 												console.log('Keys created');
 												createGenesis(null, (genesis)=>{
 													createConfig("eosio", ()=>{
-														
+
 														lauchNodeos(()=>{
 															killNodeos(()=>{
 																	
