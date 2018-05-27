@@ -362,8 +362,8 @@ function main(){
 
 				//console.log("masterPrivateKey: " + masterPrivateKey);
 				console.log("masterPublicKey: " +  masterPublicKey);
-				exec('echo ' + masterPrivateKey + ' > ~/'  + eosTitanPath + '/masterPrivateKey.key');
-				exec('echo ' + masterPublicKey + ' > ~/'  + eosTitanPath + '/masterPublicKey.key');
+				exec('echo ' + masterPrivateKey + ' > ' + eosTitanPath + '/masterPrivateKey.key');
+				exec('echo ' + masterPublicKey + ' > ' + eosTitanPath + '/masterPublicKey.key');
 				//console.log('Both keys have been saved to ~/EOSTITAN/')
 
 				exec('cleos wallet import ' + masterPrivateKey, (e, stdout, stderr)=> {
