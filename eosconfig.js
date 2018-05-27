@@ -592,7 +592,7 @@ function main(){
 
 	function promptDomain(cb){
 		var input = readline.createInterface(process.stdin, process.stdout);
-		input.setPrompt("Enter a domain name for discovery (leave blank to use your external IP address).");
+		input.setPrompt("Enter a domain name for discovery (example: my.domain.name:9876) or leave blank to use your external IP address and default port.");
 		input.prompt();
 		input.on('line', function(line) {
 			console.log("line", line, line.length)
@@ -699,7 +699,7 @@ function main(){
 	function addPeerToNetwork(addPeerData, cb){
 
 		console.log("Using private key of ", masterPublicKey);
-		
+
 		var signature = eos.sign(cjson.stringify(addPeerData), masterPrivateKey);
 
 		addPeerData.signature = signature;
