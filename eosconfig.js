@@ -1082,10 +1082,10 @@ function main(){
 														//config = JSON.parse(config);
 
 														console.log("CONFIG:", JSON.stringify(config, null, 2));
-														console.log("PEERS:", config.peers);
-														
-														createGenesis(config.genesis, (genesis)=>{
-															createConfig(nodeName, config.peers, ()=>{
+														console.log("PEERS:", config.network.peers);
+
+														createGenesis(config.network.genesis, (genesis)=>{
+															createConfig(nodeName, config.network.peers, ()=>{
 																console.log('Node configuration is complete.');
 
 																launchNodeos(false, ()=>{
