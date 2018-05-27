@@ -794,7 +794,7 @@ function main(){
 												createGenesis(null, (genesis)=>{
 													createConfig("eosio", ()=>{
 
-														lauchNodeos(()=>{
+														launchNodeos(()=>{
 															killNodeos(()=>{
 																	
 																let config = {
