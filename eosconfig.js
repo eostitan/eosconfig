@@ -505,6 +505,46 @@ function main(){
 		});
 	}
 
+	function promptAddPeer(cb){
+		var input = readline.createInterface(process.stdin, process.stdout);
+		input.setPrompt("Do you want to add yourself as a peer for p2p discovery (Y/n)? ");
+		input.prompt();
+		input.on('line', function(line) {
+			console.log("line", line, line.length)
+		    if (line == 0 || line.toLowerCase() == 'y' ||  line.toLowerCase() == 'yes'){
+					input.close();
+		    	return promptDomain();
+		    }
+		    else {
+					input.close();
+		    	return cb(false);
+		    }
+		}).on('close',function(){
+		});
+	}
+
+	function promptDomain(cb){
+		var input = readline.createInterface(process.stdin, process.stdout);
+		input.setPrompt("Enter a domain name for discovery (leave blank to use your external IP address).");
+		input.prompt();
+		input.on('line', function(line) {
+			console.log("line", line, line.length)
+		    if (line == 0){
+					input.close();
+					request.get("https://api.ipify.org?format=text", (error, response, body)=>{
+						if (body) return cb(body);
+						else return cb(false);
+					})
+
+		    }
+		    else {
+					input.close();
+		    	return cb(line);
+		    }
+		}).on('close',function(){
+		});
+	}
+
 	function promptDeleteData(cb){
 		var input = readline.createInterface(process.stdin, process.stdout);
 		input.setPrompt("Data folder already exists. Would you like to delete it (Y/n)?");
@@ -903,22 +943,38 @@ function main(){
 																	tag:chosenTag || defaultTag,
 																	genesis: genesis
 																}
+																
+																promptAddPeer((peer)=>{
 
-																pushNetworkConfiguration(config, (err, res)=>{
-																	if (err) console.log("error:", err); //todo: reprompt
+																	pushNetworkConfiguration(config, (err, res)=>{
+																		if (err) console.log("error:", err); //todo: reprompt
 
-																	fetchNetworkConfiguration(name, (err, res)=>{
-																		if (err) return console.log("error:", err);
+																		if (peer!=false){
+																			
+																			complete();
 
-																		console.log("CONFIG:", JSON.stringify(res, null, 2));
+																		}
+																		else complete()
 
-																		console.log('Node configuration is complete.');
+																		function complete(){
 
-																		configureChainBIOS(res.network.boot, ()=>{
-																			console.log("Blockchain bootstrapping is complete.");
-																		});
+																			fetchNetworkConfiguration(name, (err, res)=>{
+																				if (err) return console.log("error:", err);
+																			
+																				console.log("CONFIG:", JSON.stringify(res, null, 2));
+
+																				console.log('Node configuration is complete.');
+
+																				configureChainBIOS(res.network.boot, ()=>{
+																					console.log("Blockchain bootstrapping is complete.");
+																				});
+
+																			});
+
+																		}
 
 																	});
+
 																});
 
 															})
