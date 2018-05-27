@@ -646,6 +646,9 @@ function main(){
 			args.push("--config-dir");
 			args.push(configPath);
 
+			args.push("--max-transaction-time");
+			args.push("1000");
+
 			args.push("--plugin");
 			args.push("eosio::chain_api_plugin");
 
@@ -666,6 +669,7 @@ function main(){
 
 			args.push("-p");
 			args.push("eosio");
+
 
 
 /*
