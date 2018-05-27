@@ -782,7 +782,7 @@ function main(){
 
 			//cleos push action eosio.token issue '[ "eosio", "1000000000.0000 SYS", "memo" ]' -p eosio
 
-			//let args =  "'" + '["' + command.params.join('","') + '"]' + "'";
+			let params =  "'" + '["' + command.params.join('","') + '"]' + "'";
 
       //console.log('cleos push action ' + command.contract + " " + command.action + " " + args + " -p " + command.signature );
 
@@ -793,7 +793,7 @@ function main(){
       args.push("action");
       args.push(command.contract);
       args.push(command.action);
-      args.push(args);
+      args.push(params);
       args.push("-p");
       args.push(command.signature);
 
