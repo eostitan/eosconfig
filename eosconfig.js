@@ -627,7 +627,7 @@ function main(){
 	function executeBIOSCommand(command, cb){
 
 		if (command.command=="nodeos"){
-
+/*
 			console.log("Starting nodeos...", command);
 
 			let args = [];
@@ -660,9 +660,9 @@ function main(){
 			args.push("-p");
 			args.push("eosio");
 
-			console.log("Using args:", args.join(" "));
+			console.log("Using args:", args.join(" "));*/
 
-			var nodeos = spawn('nohup', args);
+			var nodeos = spawn('./nodeos.sh');
 
 			nodeos.stderr.setEncoding('utf8');
 
