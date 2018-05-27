@@ -732,7 +732,7 @@ function main(){
 
       let filepath = path.join(repoPath, "build", "contracts", command.path);
 
-      console.log('cleos set contract ' + command.name + " " + filepath);
+      //console.log('cleos set contract ' + command.name + " " + filepath);
 
       let args = [];
 
@@ -782,9 +782,9 @@ function main(){
 
 			//cleos push action eosio.token issue '[ "eosio", "1000000000.0000 SYS", "memo" ]' -p eosio
 
-			let args =  "'" + '["' + command.params.join('","') + '"]' + "'";
+			//let args =  "'" + '["' + command.params.join('","') + '"]' + "'";
 
-      console.log('cleos push action ' + command.contract + " " + command.action + " " + args + " -p " + command.signature );
+      //console.log('cleos push action ' + command.contract + " " + command.action + " " + args + " -p " + command.signature );
 
 
       let args = [];
