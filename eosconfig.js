@@ -234,8 +234,10 @@ function main(){
 	}
 
 	function killNodeos(cb){
-		if (nodeos_pre)
+		if (nodeos_pre){
 			nodeos_pre.kill();
+			console.log("Killed nodeos");
+		}
 
 		setTimeout(function(){
 
