@@ -705,6 +705,7 @@ function main(){
 		request({url: serverURL + '/addpeer', method: 'POST', json:addPeerData}, function(err, res, body){
 		
 			if (body){
+				console.log("body", body);
 				console.log("Added as peer to discovery file.");
 
 				return cb && cb(null, body);
