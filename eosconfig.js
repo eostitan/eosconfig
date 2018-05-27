@@ -646,9 +646,6 @@ function main(){
 			args.push("--config-dir");
 			args.push(configPath);
 
-			args.push("-c");
-			args.push("config.ini");
-
 			args.push("--plugin");
 			args.push("eosio::chain_api_plugin");
 
