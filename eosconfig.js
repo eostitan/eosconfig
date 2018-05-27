@@ -682,6 +682,12 @@ function main(){
 
 			killNodeos(()=>{
 				var nodeos = spawn("nodeos", args);
+
+				nodeos.stdout.setEncoding('utf8');
+				nodeos.stdout.on('data', (chunk) => {
+					console.log(chunk)
+				});
+						
 				return setTimeout(cb, 2000); //replace by smart stderr handling
 
 			});
