@@ -698,6 +698,8 @@ function main(){
 
 	function addPeerToNetwork(addPeerData, cb){
 
+		console.log("Using private key of ", masterPublicKey);
+		
 		var signature = eos.sign(cjson.stringify(addPeerData), masterPrivateKey);
 
 		addPeerData.signature = signature;
@@ -713,7 +715,6 @@ function main(){
 			else return cb && cb({error: "Could not add peer to discvoery file."});
 
 		});
-
 
 	}
 
