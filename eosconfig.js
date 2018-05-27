@@ -636,8 +636,6 @@ function main(){
 	function executeBIOSCommand(command, cb){
 
 		if (command.command=="nodeos"){
-/*
-			console.log("Starting nodeos...", command);
 
 			let args = [];
 
@@ -669,20 +667,22 @@ function main(){
 			args.push("-p");
 			args.push("eosio");
 
+
+/*
+			console.log("Starting nodeos...", command);
+
+			
 			console.log("Using args:", args.join(" "));*/
 /*
 			var scriptPath = path.join(eosTitanPath, 'nodeos.sh');
 
 			console.log("launching nodeos script, path:", scriptPath);
 */
-			var nodeos = execFile(path.join(eosTitanPath,"nodeos.sh"), (error, stdout, stderr) => {
-			  
-			  if (error) {
-			    console.log("error", error);
-			  }
+			nodeos_pre = spawn("nodeos", args);
 
-			  console.log("stdout", stdout);
-			  console.log("stderr", stderr);
+			killNodeos(()=>{
+				var nodeos = spawn("nodeos", args);
+				return setTimeout(cb, 2000); //replace by smart stderr handling
 
 			});
 
@@ -701,8 +701,6 @@ function main(){
 			nodeos.on('error', function(err) {
 			  console.log('error: ' + err);
 			});*/
-
-			return setTimeout(cb, 2000); //replace by smart stderr handling
 
 		}
 		else if (command.command=="generate_contract_keys"){
