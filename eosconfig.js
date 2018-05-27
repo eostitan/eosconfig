@@ -211,7 +211,11 @@ function main(){
 	}
 
  	function launchNodeos(cb){
-		nodeos = exec('nodeos --genesis-json ' + genesisFile, (e, stdout, stderr)=> {
+		exec('nodeos --genesis-json ' + genesisFile, (e, stdout, stderr)=> {
+
+			nodeos = e;
+			
+			//console.log("RES");
 
 			if (stdout){
 				console.log(stdout);
@@ -232,8 +236,8 @@ function main(){
 	}
 
 	function killNodeos(cb){
-		if (nodeos)
-			nodeos.kill();
+		//if (nodeos)
+		//	nodeos.kill();
 
 		setTimeout(function(){
 
