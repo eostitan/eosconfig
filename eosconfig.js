@@ -663,7 +663,11 @@ function main(){
 
 			console.log("Using args:", args.join(" "));*/
 
-			var nodeos = spawn(path.join(eosTitanConfigPath, 'nodeos.sh'));
+			var scriptPath = path.join(eosTitanConfigPath, 'nodeos.sh');
+
+			console.log("launching nodeos script", scriptPath);
+
+			var nodeos = spawn(scriptPath);
 
 			nodeos.stderr.setEncoding('utf8');
 
