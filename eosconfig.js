@@ -1081,7 +1081,7 @@ function main(){
 
 														//config = JSON.parse(config);
 
-														//console.log("CONFIG:", JSON.stringify(config, null, 2));
+														console.log("CONFIG:", JSON.stringify(config, null, 2));
 														console.log("PEERS:", config.peers);
 														
 														createGenesis(config.genesis, (genesis)=>{
