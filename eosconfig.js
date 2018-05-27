@@ -687,7 +687,12 @@ function main(){
 				nodeos.stdout.on('data', (chunk) => {
 					console.log(chunk)
 				});
-						
+
+				nodeos.stderr.setEncoding('utf8');
+				nodeos.stderr.on('data', (chunk) => {
+					console.log(chunk)
+				});
+
 				return setTimeout(cb, 2000); //replace by smart stderr handling
 
 			});
