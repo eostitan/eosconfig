@@ -211,20 +211,35 @@ function main(){
 	}
 
  	function launchNodeos(cb){
-		nodeos  = exec('nodeos --genesis-json /home/g/.local/share/eosio/nodeos/config/genesis.json');
+		nodeos = exec('nodeos --genesis-json ' + genesisFile, (e, stdout, stderr)=> {
 
-		setTimeout(function(){
+			if (stdout){
+				console.log(stdout);
+			}
+			else if (stderr){
+				console.log(stderr);
+			}
 
-			return cb && cb();
+			setTimeout(function(){
 
-		}, 1000);
+				return cb && cb();
+
+			}, 1000);
+
+		});
+
+
 	}
 
 	function killNodeos(cb){
 		if (nodeos)
 			nodeos.kill();
 
-		return cb && cb();
+		setTimeout(function(){
+
+			return cb && cb();
+
+		}, 1000);
 		
 	}
 
