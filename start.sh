@@ -26,6 +26,11 @@ if (program_is_installed node -eq 1) && [ -d './EOSTITAN/eosconfig' ] && [ -d '.
 then
 	echo Inital setup previously completed, launching eos config;
 	cd EOSTITAN;
+
+	wget https://raw.githubusercontent.com/eostitan/eosconfig/master/nodeos.sh
+
+	chmod +x nodeos.sh
+
 	cd eosconfig;
 	git pull;
 	npm install;
