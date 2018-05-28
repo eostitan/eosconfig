@@ -258,10 +258,56 @@ function main(){
 
 	}
 
- 	function launchNodeos(setGenesis, cb){
+ 	function launchNodeos(account, setGenesis, cb){
  		var args = [];
 
+ 		if (account == "eosio"){
+
+			args.push("-e");
+
+			args.push("--config-dir");
+			args.push(configPath);
+
+			args.push("-p");
+			args.push("eosio");
+
+ 		}
+ 		else {
+
+			args.push("-p");
+			args.push(account);
+
+ 		}
+
+		args.push("--max-transaction-time");
+		args.push("1000");
+
+		args.push("--plugin");
+		args.push("eosio::chain_api_plugin");
+
+		args.push("--plugin");
+		args.push("eosio::producer_plugin");
+
+		args.push("--plugin");
+		args.push("eosio::history_api_plugin");
+
+		args.push("--plugin");
+		args.push("eosio::history_plugin");
+
+		args.push("--plugin");
+		args.push("eosio::http_plugin");
+
+		args.push("--http-server-address");
+		args.push("0.0.0.0:8888");
+
+		args.push("--p2p-listen-endpoint");
+		args.push("0.0.0.0:9876");
+
+		args.push("--p2p-server-address");
+		args.push("0.0.0.0:9876");
+
  		if (setGenesis){
+			args.push("--delete-all-blocks");
 			args.push("--genesis-json");
 			args.push(genesisFile);
  		}
@@ -635,8 +681,15 @@ function main(){
 		input.setPrompt("Please enter your account name (to be created on the network). ");
 		input.prompt();
 		input.on('line', function(line) {
-			input.close();
-			return cb(line);
+
+			if (line.length!=12){
+	    	console.log('Please enter an account name of 12 alphanumerical characters.');
+	    	input.prompt();
+			}
+			else {
+				input.close();
+				return cb(line);
+			}
 		}).on('close',function(){
 		});
 	}
@@ -1025,7 +1078,7 @@ function main(){
 												createGenesis(null, (genesis)=>{
 													createConfig("eosio", [], ()=>{
 
-														launchNodeos(true, ()=>{
+														launchNodeos("eosio", true, ()=>{
 															killNodeos(()=>{
 
 																let config = {
@@ -1089,7 +1142,7 @@ function main(){
 				else {
 
 			    promptNetworkName("join", (name)=>{
-			    	promptNodeName((nodeName)=>{
+			    	promptNodeName((accountName)=>{
 
 							fetchNetworkConfiguration(name, (err, config)=>{
 
@@ -1116,10 +1169,10 @@ function main(){
 														console.log("peers:", config.network.peers);
 
 														createGenesis(config.network.genesis, (genesis)=>{
-															createConfig(nodeName, config.network.peers, ()=>{
+															createConfig(accountName, config.network.peers, ()=>{
 																console.log('Node configuration is complete.');
 
-																launchNodeos(true, ()=>{
+																launchNodeos(accountName, true, ()=>{
 
 																});
 
