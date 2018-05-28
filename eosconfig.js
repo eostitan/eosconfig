@@ -379,8 +379,18 @@ function main(){
 			if (stderr){
 				if (stderr.includes('Wallet already exists')){
 					console.log('Wallet exists, checking for saved key...');
-					var defaultWalletKey = fs.readFileSync(path.join(eosTitanPath, "defaultWallet.key"), "utf8");
 
+					var defaultWalletKey;
+
+					if (fs.existsSync(path.join(eosTitanPath, "defaultWallet.key"))){
+						
+					console.log('Password exists');
+
+						defaultWalletKey = fs.readFileSync(path.join(eosTitanPath, "defaultWallet.key"), "utf8");
+
+					}
+
+					
 					if (!defaultWalletKey){
 						console.log('cant find wallet password')
 
@@ -390,7 +400,7 @@ function main(){
 						});
 
 					}
-					else{
+					else{ 
 						walletKey = defaultWalletKey;
 						cb();
 					}
