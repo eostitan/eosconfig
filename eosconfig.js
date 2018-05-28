@@ -258,7 +258,7 @@ function main(){
 
 	}
 
-	function getNodeosArgs(account, setGenesis, startProducing){
+	function getNodeosArgs(account, setGenesis, startProducing, shell){
 
 		var args = [];
 
@@ -293,7 +293,9 @@ function main(){
 	 		}
 
 			args.push("--private-key");
-			args.push('["' + masterPublicKey + '","' + masterPrivateKey + '"]');
+
+			if (shell) args.push("'" + '["' + masterPublicKey + '","' + masterPrivateKey + '"]' + "'");
+			else args.push('["' + masterPublicKey + '","' + masterPrivateKey + '"]');
 
  		}
 
@@ -336,19 +338,19 @@ function main(){
 
 	function promptLaunchNodeos(account, setGenesis, startProducing, cb){
 
-		var args = getNodeosArgs(account, setGenesis, startProducing);
+		var args = getNodeosArgs(account, setGenesis, startProducing, true);
 
  		console.log("Completed configuration.");
  		console.log("Launch nodeos with command:");
  		console.log("nodeos", args.join(" "));
 
  		process.exit(0);
- 		
+
 	}
 
  	function launchNodeos(account, setGenesis, startProducing, cb){
  		
-		var args = getNodeosArgs(account, setGenesis, startProducing);
+		var args = getNodeosArgs(account, setGenesis, startProducing, false);
 
  		console.log("Launching nodeos with args:", args.join(" "));
 
