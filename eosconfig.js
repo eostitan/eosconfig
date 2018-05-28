@@ -277,6 +277,11 @@ function main(){
 			args.push("-p");
 			args.push(account);
 
+	 		if (setGenesis == true){
+				args.push("--config-dir");
+				args.push(configPath);
+	 		}
+
  		}
 
 		args.push("--max-transaction-time");
@@ -306,7 +311,10 @@ function main(){
 		args.push("--p2p-server-address");
 		args.push("0.0.0.0:9876");
 
- 		if (setGenesis){
+		args.push("--private-key");
+		args.push("'" + '["' + masterPublicKey + '","' + masterPrivateKey + '"]' + "'");
+
+ 		if (setGenesis == true){
 			args.push("--delete-all-blocks");
 			args.push("--genesis-json");
 			args.push(genesisFile);
