@@ -285,7 +285,7 @@ function main(){
 				args.push(account);
 		
 			}
-			
+
 	 		if (setGenesis == true){
 				args.push("--config-dir");
 				args.push(configPath);
@@ -1203,7 +1203,7 @@ function main(){
 
 																launchNodeos(accountName, true, false, ()=>{
 																	killNodeos(()=>{
-																		launchNodeos(accountName, false, true ()=>{
+																		launchNodeos(accountName, false, true, ()=>{
 																
 																		});
 																	});
