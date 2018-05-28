@@ -324,7 +324,7 @@ function main(){
 
 		setTimeout(function(){
 
-			nodeos_pre = spawn('nodeos', args, {shell:true});
+			nodeos_pre = spawn('nodeos', args);
 
 			//if (!setGenesis){
 
