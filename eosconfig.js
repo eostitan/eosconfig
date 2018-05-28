@@ -292,7 +292,7 @@ function main(){
 	 		}
 
 			args.push("--private-key");
-			args.push("'" + '["' + masterPublicKey + '","' + masterPrivateKey + '"]' + "'");
+			args.push('["' + masterPublicKey + '","' + masterPrivateKey + '"]');
 
  		}
 
