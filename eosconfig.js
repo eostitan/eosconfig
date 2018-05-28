@@ -312,6 +312,8 @@ function main(){
 			args.push(genesisFile);
  		}
 
+ 		console.log("Launching nodeos with args:", args.join(" "));
+
 		setTimeout(function(){
 
 			nodeos_pre = spawn('nodeos', args);
@@ -1173,7 +1175,11 @@ function main(){
 																console.log('Node configuration is complete.');
 
 																launchNodeos(accountName, true, ()=>{
-
+																	killNodeos(()=>{
+																		launchNodeos(accountName, false, ()=>{
+																
+																		});
+																	});
 																});
 
 															});
