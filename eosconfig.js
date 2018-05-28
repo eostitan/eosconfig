@@ -258,7 +258,7 @@ function main(){
 
 	}
 
- 	function launchNodeos(account, setGenesis, cb){
+ 	function launchNodeos(account, setGenesis, startProducing, cb){
  		var args = [];
 
  		if (account == "eosio"){
@@ -268,15 +268,24 @@ function main(){
 			args.push("--config-dir");
 			args.push(configPath);
 
-			args.push("-p");
-			args.push("eosio");
+			if (startProducing==true){
+
+				args.push("-p");
+				args.push("eosio");
+		
+			}
 
  		}
  		else {
 
-			args.push("-p");
-			args.push(account);
 
+			if (startProducing==true){
+
+				args.push("-p");
+				args.push(account);
+		
+			}
+			
 	 		if (setGenesis == true){
 				args.push("--config-dir");
 				args.push(configPath);
@@ -1098,7 +1107,7 @@ function main(){
 												createGenesis(null, (genesis)=>{
 													createConfig("eosio", [], ()=>{
 
-														launchNodeos("eosio", true, ()=>{
+														launchNodeos("eosio", true, false, ()=>{
 															killNodeos(()=>{
 
 																let config = {
@@ -1192,9 +1201,9 @@ function main(){
 															createConfig(accountName, config.network.peers, ()=>{
 																console.log('Node configuration is complete.');
 
-																launchNodeos(accountName, true, ()=>{
+																launchNodeos(accountName, true, false, ()=>{
 																	killNodeos(()=>{
-																		launchNodeos(accountName, false, ()=>{
+																		launchNodeos(accountName, false, true ()=>{
 																
 																		});
 																	});
