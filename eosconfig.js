@@ -263,12 +263,12 @@ function main(){
 
  		if (account == "eosio"){
 
-			args.push("-e");
-
 			args.push("--config-dir");
 			args.push(configPath);
 
 			if (startProducing==true){
+
+				args.push("-e");
 
 				args.push("-p");
 				args.push("eosio");
