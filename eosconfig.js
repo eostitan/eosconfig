@@ -282,6 +282,9 @@ function main(){
 				args.push(configPath);
 	 		}
 
+			args.push("--private-key");
+			args.push("'" + '["' + masterPublicKey + '","' + masterPrivateKey + '"]' + "'");
+
  		}
 
 		args.push("--max-transaction-time");
@@ -310,9 +313,6 @@ function main(){
 
 		args.push("--p2p-server-address");
 		args.push("0.0.0.0:9876");
-
-		args.push("--private-key");
-		args.push("'" + '["' + masterPublicKey + '","' + masterPrivateKey + '"]' + "'");
 
  		if (setGenesis == true){
 			args.push("--delete-all-blocks");
