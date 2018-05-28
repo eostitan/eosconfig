@@ -258,8 +258,9 @@ function main(){
 
 	}
 
- 	function launchNodeos(account, setGenesis, startProducing, cb){
- 		var args = [];
+	function getNodeosArgs(account, setGenesis, startProducing){
+
+		var args = [];
 
  		if (account == "eosio"){
 
@@ -328,6 +329,26 @@ function main(){
 			args.push("--genesis-json");
 			args.push(genesisFile);
  		}
+
+ 		return args;
+
+	}
+
+	function promptLaunchNodeos(account, setGenesis, startProducing, cb){
+
+		var args = getNodeosArgs(account, setGenesis, startProducing);
+
+ 		console.log("Completed configuration.");
+ 		console.log("Launch nodeos with command:");
+ 		console.log("nodeos", args.join(" "));
+
+ 		process.exit(0);
+ 		
+	}
+
+ 	function launchNodeos(account, setGenesis, startProducing, cb){
+ 		
+		var args = getNodeosArgs(account, setGenesis, startProducing);
 
  		console.log("Launching nodeos with args:", args.join(" "));
 
@@ -1203,9 +1224,11 @@ function main(){
 
 																launchNodeos(accountName, true, false, ()=>{
 																	killNodeos(()=>{
-																		launchNodeos(accountName, false, true, ()=>{
+
+																		promptLaunchNodeos(accountName, false, true, ()=>{
 																
 																		});
+
 																	});
 																});
 
