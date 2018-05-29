@@ -57,6 +57,7 @@ function main(){
 	const configFile = path.join(nodeosPath, "config", "config.ini");
 	const genesisFile = path.join(nodeosPath, "config", "genesis.json");
 	const bashScriptPath = path.join(eosTitanPath, "launch.sh");
+	const bashCleanScriptPath = path.join(eosTitanPath, "launch_clean.sh");
 
 
 	console.log("Creating folders...");
@@ -340,12 +341,19 @@ function main(){
 	function promptLaunchNodeos(account, setGenesis, startProducing, cb){
 
 		var args = getNodeosArgs(account, setGenesis, startProducing, true);
+		var cleanArgs = getNodeosArgs(account, true, startProducing, true);
 
 		fs.writeFileSync(bashScriptPath, "./nodeos " + args.join(" "));
+		fs.writeFileSync(bashCleanScriptPath, "./nodeos " + cleanArgs.join(" "));
+
+		exec("chmod +x ", bashScriptPath);
+		exec("chmod +x ", bashCleanScriptPath);
 
  		console.log("Completed configuration.");
  		console.log("Launch nodeos with command:");
- 		console.log("nodeos", args.join(" "));
+ 		console.log("./" + bashScriptPath);
+ 		console.log("To resync / redownload the blockchain:");
+ 		console.log("./" + bashCleanScriptPath);
 
  		process.exit(0);
 
