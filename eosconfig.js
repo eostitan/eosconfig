@@ -56,6 +56,7 @@ function main(){
 	const configPath = path.join(nodeosPath, "config");
 	const configFile = path.join(nodeosPath, "config", "config.ini");
 	const genesisFile = path.join(nodeosPath, "config", "genesis.json");
+	const bashScriptPath = path.join(eosTitanPath, "launch.sh");
 
 
 	console.log("Creating folders...");
@@ -340,6 +341,8 @@ function main(){
 
 		var args = getNodeosArgs(account, setGenesis, startProducing, true);
 
+		fs.writeFileSync(bashScriptPath, "./nodeos " + args.join(" "));
+
  		console.log("Completed configuration.");
  		console.log("Launch nodeos with command:");
  		console.log("nodeos", args.join(" "));
@@ -599,6 +602,28 @@ function main(){
 			if (body && !body.error){
 				//console.log("");
 				console.log("pushed network configuration");
+				//console.log(JSON.stringify(body, null, 2));
+				return cb && cb(null, body);
+			}
+			else return cb && cb({error: err || body.error});
+		});
+
+	}
+
+	function registerAccount(networkName, accountName, cb){
+
+		let data = {
+			account_name:accountName,
+			public_key: masterPublicKey,
+			network_name: networkName
+		}
+
+		request({url: serverURL + '/registerAccount', method: 'POST', json: data}, function(err, res, body){
+			if (err) console.log("ERROR:", err);
+
+			if (body && !body.error){
+				//console.log("");
+				console.log("pushed account registration request");
 				//console.log(JSON.stringify(body, null, 2));
 				return cb && cb(null, body);
 			}
@@ -1193,10 +1218,10 @@ function main(){
 				}
 				else {
 
-			    promptNetworkName("join", (name)=>{
+			    promptNetworkName("join", (networkName)=>{
 			    	promptNodeName((accountName)=>{
 
-							fetchNetworkConfiguration(name, (err, config)=>{
+							fetchNetworkConfiguration(networkName, (err, config)=>{
 
 								if (build){
 
@@ -1224,13 +1249,17 @@ function main(){
 															createConfig(accountName, config.network.peers, ()=>{
 																console.log('Node configuration is complete.');
 
-																launchNodeos(accountName, true, false, ()=>{
-																	killNodeos(()=>{
+																console.log('Registering account...');
 
-																		promptLaunchNodeos(accountName, false, true, ()=>{
-																
+																registerAccount(networkName, accountName, ()=>{
+																	launchNodeos(accountName, true, false, ()=>{
+																		killNodeos(()=>{
+
+																			promptLaunchNodeos(accountName, false, true, ()=>{
+																	
+																			});
+
 																		});
-
 																	});
 																});
 
