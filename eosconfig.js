@@ -343,8 +343,8 @@ function main(){
 		var args = getNodeosArgs(account, setGenesis, startProducing, true);
 		var cleanArgs = getNodeosArgs(account, true, startProducing, true);
 
-		fs.writeFileSync(bashScriptPath, "./nodeos " + args.join(" "));
-		fs.writeFileSync(bashCleanScriptPath, "./nodeos " + cleanArgs.join(" "));
+		fs.writeFileSync(bashScriptPath, "nodeos " + args.join(" "));
+		fs.writeFileSync(bashCleanScriptPath, "nodeos " + cleanArgs.join(" "));
 
 		exec("chmod +x ", bashScriptPath);
 		exec("chmod +x ", bashCleanScriptPath);
