@@ -1,6 +1,6 @@
 # eosconfig
 
-Bash and nodejs scripts to automate creating/joing EOS networks from a debian based server
+Bash and Node.js scripts to automate creating/joining EOS networks from a Debian-based server
 
 INSTRUCTIONS
 
